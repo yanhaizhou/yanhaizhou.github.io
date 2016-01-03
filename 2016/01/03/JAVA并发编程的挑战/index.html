@@ -8,10 +8,10 @@
   <meta name="description" content="1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。于是我们其实可以这样来减少上下文的切换：    1.无锁并发编程（避免使用锁，比如数据分段处理）    2.CAS算法（如JAVA的Atomic包）    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）2.多线程如何避免死">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JAVA并发编程的挑战">
-<meta property="og:url" content="http://yoursite.com/20115/01/03/JAVA并发编程的挑战/index.html">
+<meta property="og:url" content="http://yoursite.com/2016/01/03/JAVA并发编程的挑战/index.html">
 <meta property="og:site_name" content="Darren Yan’s Blog">
 <meta property="og:description" content="1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。于是我们其实可以这样来减少上下文的切换：    1.无锁并发编程（避免使用锁，比如数据分段处理）    2.CAS算法（如JAVA的Atomic包）    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）2.多线程如何避免死">
-<meta property="og:updated_time" content="2016-01-03T14:50:50.000Z">
+<meta property="og:updated_time" content="2016-01-03T14:52:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA并发编程的挑战">
 <meta name="twitter:description" content="1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。于是我们其实可以这样来减少上下文的切换：    1.无锁并发编程（避免使用锁，比如数据分段处理）    2.CAS算法（如JAVA的Atomic包）    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）2.多线程如何避免死">
@@ -116,7 +116,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 10px;">JAVA并发编程的艺术</a>
+                        <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA并发编程/" style="font-size: 10px;">JAVA并发编程</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 10px;">JAVA并发编程的艺术</a>
                     </div>
                 </section>
                 
@@ -191,8 +191,8 @@
       <div class="body-wrap"><article id="post-JAVA并发编程的挑战" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/20115/01/03/JAVA并发编程的挑战/" class="article-date">
-      <time datetime="+020115-01-03T13:37:47.000Z" itemprop="datePublished">20115-01-03</time>
+      <a href="/2016/01/03/JAVA并发编程的挑战/" class="article-date">
+      <time datetime="2016-01-03T13:37:47.000Z" itemprop="datePublished">2016-01-03</time>
 </a>
     </div>
   
@@ -244,13 +244,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/20115/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a></p>
+        <p><span>本文标题:</span><a href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Darren Yan 的个人博客">Darren Yan</a></p>
-        <p><span>发布时间:</span>20115年01月03日 - 21时37分</p>
-        <p><span>最后更新:</span>2016年01月03日 - 22时50分</p>
+        <p><span>发布时间:</span>2016年01月03日 - 21时37分</p>
+        <p><span>最后更新:</span>2016年01月03日 - 22时52分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/20115/01/03/JAVA并发编程的挑战/" title="JAVA并发编程的挑战">http://yoursite.com/20115/01/03/JAVA并发编程的挑战/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/20115/01/03/JAVA并发编程的挑战/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/03/JAVA并发编程的挑战/" title="JAVA并发编程的挑战">http://yoursite.com/2016/01/03/JAVA并发编程的挑战/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/01/03/JAVA并发编程的挑战/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -262,6 +262,12 @@
 
 
     <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/01/03/JAVA并发机制的底层实现原理/">
+                    JAVA并发机制的底层实现原理
+                </a>
+            </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
@@ -339,7 +345,7 @@
 
     <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="20115/01/03/JAVA并发编程的挑战/" data-title="JAVA并发编程的挑战" data-url="http://yoursite.com/20115/01/03/JAVA并发编程的挑战/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/03/JAVA并发编程的挑战/" data-title="JAVA并发编程的挑战" data-url="http://yoursite.com/2016/01/03/JAVA并发编程的挑战/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -366,7 +372,9 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2016/01/03/JAVA并发机制的底层实现原理/" title="上一篇: JAVA并发机制的底层实现原理">
+                <i class="fa fa-angle-left"></i>
+            </a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
@@ -378,7 +386,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/20115/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/01/hello-world/">Hello World</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/03/JAVA并发机制的底层实现原理/">JAVA并发机制的底层实现原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/01/hello-world/">Hello World</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
