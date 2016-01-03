@@ -5,34 +5,16 @@
   
   <title>JAVA并发编程的挑战 | Darren Yan’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="####1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。
-于是我们其实可以这样来减少上下文的切换：
-1.无锁并发编程（避免使用锁，比如数据分段处理）
-2.CAS算法（如JAVA的Atomic包）
-3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）
-4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）
-####2.多线程如何避免死锁">
+  <meta name="description" content="1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。于是我们其实可以这样来减少上下文的切换：    1.无锁并发编程（避免使用锁，比如数据分段处理）    2.CAS算法（如JAVA的Atomic包）    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）2.多线程如何避免死">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JAVA并发编程的挑战">
 <meta property="og:url" content="http://yoursite.com/20115/01/03/JAVA并发编程的挑战/index.html">
 <meta property="og:site_name" content="Darren Yan’s Blog">
-<meta property="og:description" content="####1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。
-于是我们其实可以这样来减少上下文的切换：
-1.无锁并发编程（避免使用锁，比如数据分段处理）
-2.CAS算法（如JAVA的Atomic包）
-3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）
-4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）
-####2.多线程如何避免死锁">
-<meta property="og:updated_time" content="2016-01-03T14:33:00.000Z">
+<meta property="og:description" content="1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。于是我们其实可以这样来减少上下文的切换：    1.无锁并发编程（避免使用锁，比如数据分段处理）    2.CAS算法（如JAVA的Atomic包）    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）2.多线程如何避免死">
+<meta property="og:updated_time" content="2016-01-03T14:50:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA并发编程的挑战">
-<meta name="twitter:description" content="####1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。
-于是我们其实可以这样来减少上下文的切换：
-1.无锁并发编程（避免使用锁，比如数据分段处理）
-2.CAS算法（如JAVA的Atomic包）
-3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）
-4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）
-####2.多线程如何避免死锁">
+<meta name="twitter:description" content="1.多线程一定快吗？不一定。因为多线程有上下文切换和创建进程的开销。于是我们其实可以这样来减少上下文的切换：    1.无锁并发编程（避免使用锁，比如数据分段处理）    2.CAS算法（如JAVA的Atomic包）    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）2.多线程如何避免死">
   
   
     <link rel="icon" href="/favicon.png">
@@ -244,21 +226,16 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>####1.多线程一定快吗？<br>不一定。因为多线程有上下文切换和创建进程的开销。</p>
-<p>于是我们其实可以这样来减少上下文的切换：</p>
-<pre><code>1.无锁并发编程（避免使用锁，比如数据分段处理）
-2.CAS算法（如JAVA的Atomic包）
-3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）
-4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）
-</code></pre><p>####2.多线程如何避免死锁</p>
+        <h4>1.多线程一定快吗？</h4><br>不一定。因为多线程有上下文切换和创建进程的开销。<br><br>于是我们其实可以这样来减少上下文的切换：<br><br>    1.无锁并发编程（避免使用锁，比如数据分段处理）<br>    2.CAS算法（如JAVA的Atomic包）<br>    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）<br>    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）<br><br><h4>2.多线程如何避免死锁</h4>
+
 <pre><code>1.避免一个线程同时获取多个锁
 2.尽量每个锁只占有一个或者尽量少的资源
 3.使用定时锁来代替内部锁机制
 4.数据库锁的加锁和解锁必须在同一个数据库连接中
-</code></pre><p>####3.资源限制<br>&emsp;我们在讨论效率和速度的时候经常忽略一个点，那就是我们所研究的东西都是建立在计算机硬件资源和软件资源条件允许的情况上，但是，其实，<strong>程序的执行速度受限制于计算机的硬件和软件资源</strong>。比如有时候我们下载一个资源，可能服务器限定最高每个访问最高下载速度是1MB每秒，这时候假设我们会开启10条线程进行下载，但是如果服务器或者用户机器的带宽只有2MB每秒，速度就不可能达到10MB每秒。当然除此之外还有硬盘读写速度，CPU处理度等。</p>
-<p>####4.资源限制引发的问题<br>&emsp;如果受限于资源，那么出于效率考虑将串行的代码改为并发执行，仍然在串行执行，这时候<strong>程序不但不会加速执行，反而会更慢，因为增加了上下文切换和资源调度的时间。</strong></p>
-<p>####5.解决资源限制的问题<br>    -硬件资源限制可以考虑强化单机的资源或者让程序在多机上执行。<br>    -软件资源限制可以考虑使用资源池将资源复用。比如复用数据库和Socket连接等。</p>
-<p>–源自《JAVA并发编程的艺术》第一章“JAVA并发编程的挑战”读书笔记</p>
+</code></pre><p></p><h4>3.资源限制</h4><br>&emsp;我们在讨论效率和速度的时候经常忽略一个点，那就是我们所研究的东西都是建立在计算机硬件资源和软件资源条件允许的情况上，但是，其实，<strong>程序的执行速度受限制于计算机的硬件和软件资源</strong>。比如有时候我们下载一个资源，可能服务器限定最高每个访问最高下载速度是1MB每秒，这时候假设我们会开启10条线程进行下载，但是如果服务器或者用户机器的带宽只有2MB每秒，速度就不可能达到10MB每秒。当然除此之外还有硬盘读写速度，CPU处理度等。<p></p>
+<p></p><h4>4.资源限制引发的问题</h4><br>&emsp;如果受限于资源，那么出于效率考虑将串行的代码改为并发执行，仍然在串行执行，这时候<strong>程序不但不会加速执行，反而会更慢，因为增加了上下文切换和资源调度的时间。</strong><p></p>
+<p></p><h4>5.解决资源限制的问题</h4><br>    -硬件资源限制可以考虑强化单机的资源或者让程序在多机上执行。<br>    -软件资源限制可以考虑使用资源池将资源复用。比如复用数据库和Socket连接等。<p></p>
+<p><br><br>–源自《JAVA并发编程的艺术》第一章“JAVA并发编程的挑战”读书笔记</p>
 
       
     </div>
@@ -270,7 +247,7 @@
         <p><span>本文标题:</span><a href="/20115/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Darren Yan 的个人博客">Darren Yan</a></p>
         <p><span>发布时间:</span>20115年01月03日 - 21时37分</p>
-        <p><span>最后更新:</span>2016年01月03日 - 22时33分</p>
+        <p><span>最后更新:</span>2016年01月03日 - 22时50分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/20115/01/03/JAVA并发编程的挑战/" title="JAVA并发编程的挑战">http://yoursite.com/20115/01/03/JAVA并发编程的挑战/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/20115/01/03/JAVA并发编程的挑战/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -300,7 +277,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1.多线程一定快吗？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2.多线程如何避免死锁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3.资源限制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4.资源限制引发的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5.解决资源限制的问题</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
