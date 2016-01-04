@@ -192,6 +192,91 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-JAVA内存模型" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/04/JAVA内存模型/" class="article-date">
+      <time datetime="2016-01-04T14:10:36.000Z" itemprop="datePublished">2016-01-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/04/JAVA内存模型/">JAVA内存模型</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h4>1.JAVA中的数据存储</h4><br>    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.<br>    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）<br>    3. 堆：存放所有new出来的对象。<br>    4. 静态域：存放静态成员（static定义的）<br>    5. 常量池：存放字符串常量和基本类型常量（public static final）。有时，在嵌入式系统中，常量本身会和其他部分分割离开(由于版权等其他原因)，所以在这种情况下，可以选择将其放在ROM中 。<br>    6. 非RAM存储：硬盘等永久存储空间<br><h4>2.关于JAVA内存模型</h4><br>&emsp;Java内存模型（简称JMM）决定一个线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存，每个线程都一个私有的本地内存，本地内存存储着该线程以读/写共享变量的副本。本地内存是个抽象概念，并不真实存在。<strong>JMM通过控制主内存与每个线程的本地内存之间的交互，来为Java程序猿提供内存可见性保证。</strong><br><h4>3.关于重排序</h4><br>&emsp;执行程序的时候，为了提高性能，编译器和处理器经常对指令进行重排序，重排序有三种：<br><br>    1.编译器优化的重排序<br>    2.指令级并行的重排序<br>    3.内存系统的重排序（由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行）<br>源代码-&gt;编译器优化重排序-&gt;指令级并行重排序-&gt;内存系统重排序-&gt;最终执行序列<br><h4>4.数据依赖</h4><br>    写后读，写后写，读后写。<br><h4>5.as-if-serial语义</h4><br>    不管怎么重排序，程序的执行结果不能被改变。<br><h4>6.处理器重排序影响程序执行结果的解决方法</h4><br>    对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定类型的内存屏障指令来禁止特定类型的处理器重排序。<br><h4>7.happens-before关系</h4><br>    在JMM中，如果一个操作的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。JMM通过happens-before关系向程序猿提供跨线程的内存可见性保证。<br><h4>8.重排序64位的写操作的结果</h4><br>    由于64位的long/double变量的写操作拆分为两个32位的写操作执行，两个32位的写操作可能会被分配到不同的总线事务中执行，此时，对这个64位变量的写操作将不具有原子性。但是jdk5开始，读具有原子性，仅允许拆分写。<br><h4>9.volatile变量的特性</h4>
+
+<pre><code>1.可见性：对一个volatile变量的读，总是能看到任意线程对这个volatile变量最后的写入
+2.原子性
+</code></pre><p></p><h4>10.volatile写-读得内存语义</h4><br>    1.写：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存；<br>     2.读：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，并从主内存中读取共享变量。<p></p>
+<p></p><h4>11.JMM如何实现volatile的内存语义</h4><br>    为了保证能够正确实现volatile的内存语义，JMM可以选择在每个volatile写的后面或者每个volatile读的前面插入一个StoreLoad屏障。但是，为了考虑整体执行效率，JMM选择在每个volatile写的后面插入一个StoreLoad屏障。（首先保证正确性，再去考虑效率）<p></p>
+<p></p><h4>12.对于final域，编译器和处理器要遵守两个重排序规则</h4><br>    1.在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序；（写final域的操作不会重排序到构造器之外，但是在多线程环境下，普通的写操作会）<br>    2.初次读一个包含final域的对象的引用，与随后初次读这个域，这两个操作之间不能重排序。（ 初次读对象引用和初次读该对象包含的final域，这两个操作存在间接依赖的关系。即，在读一个对象final域之前，一定会先读包含这个final域的对象的引用。）<p></p>
+<p></p><h4>13.具有volatile变量的类在被new的时候</h4><br>    在构造函数返回前，被构造对象的引用不能为其他线程所见。（需要另一个保证：在构造函数内部，不能让这个被构造对象的引用为其他线程所见。如obj=this;这样的操作会使this引用溢出）<p></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: true,
+            isPost: false,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+
+  
     <article id="post-JAVA并发机制的底层实现原理" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

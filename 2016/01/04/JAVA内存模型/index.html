@@ -3,21 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>JAVA并发机制的底层实现原理 | Darren Yan’s Blog</title>
+  <title>JAVA内存模型 | Darren Yan’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="&amp;emsp;关键字volatile
-1.volatile的定义    JAVA编程语言允许线程访问共享变量，为了确保共享变量能够被准备和一致地更新，线程应该确保通过排它锁单独获得这个变量。2.对有volatile变量修饰的共享变量进行写操作会汇编指令多出一行代码：Lock前缀指令。Lock前缀的指令在多核处理器下会引发以下两件事情    1.将当前处理器缓存行的数据回写到系统内存。    2.这个">
+  <meta name="description" content="1.JAVA中的数据存储    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）    3. 堆：存放所有new出来的对象。    4. 静态域：存放静态成员（static定义的）    5">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JAVA并发机制的底层实现原理">
-<meta property="og:url" content="http://yoursite.com/2016/01/03/JAVA并发机制的底层实现原理/index.html">
+<meta property="og:title" content="JAVA内存模型">
+<meta property="og:url" content="http://yoursite.com/2016/01/04/JAVA内存模型/index.html">
 <meta property="og:site_name" content="Darren Yan’s Blog">
-<meta property="og:description" content="&amp;emsp;关键字volatile
-1.volatile的定义    JAVA编程语言允许线程访问共享变量，为了确保共享变量能够被准备和一致地更新，线程应该确保通过排它锁单独获得这个变量。2.对有volatile变量修饰的共享变量进行写操作会汇编指令多出一行代码：Lock前缀指令。Lock前缀的指令在多核处理器下会引发以下两件事情    1.将当前处理器缓存行的数据回写到系统内存。    2.这个">
-<meta property="og:updated_time" content="2016-01-03T16:08:28.000Z">
+<meta property="og:description" content="1.JAVA中的数据存储    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）    3. 堆：存放所有new出来的对象。    4. 静态域：存放静态成员（static定义的）    5">
+<meta property="og:updated_time" content="2016-01-04T14:11:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JAVA并发机制的底层实现原理">
-<meta name="twitter:description" content="&amp;emsp;关键字volatile
-1.volatile的定义    JAVA编程语言允许线程访问共享变量，为了确保共享变量能够被准备和一致地更新，线程应该确保通过排它锁单独获得这个变量。2.对有volatile变量修饰的共享变量进行写操作会汇编指令多出一行代码：Lock前缀指令。Lock前缀的指令在多核处理器下会引发以下两件事情    1.将当前处理器缓存行的数据回写到系统内存。    2.这个">
+<meta name="twitter:title" content="JAVA内存模型">
+<meta name="twitter:description" content="1.JAVA中的数据存储    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）    3. 堆：存放所有new出来的对象。    4. 静态域：存放静态成员（static定义的）    5">
   
   
     <link rel="icon" href="/favicon.png">
@@ -191,11 +188,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-JAVA并发机制的底层实现原理" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-JAVA内存模型" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/03/JAVA并发机制的底层实现原理/" class="article-date">
-      <time datetime="2016-01-03T14:54:21.000Z" itemprop="datePublished">2016-01-03</time>
+      <a href="/2016/01/04/JAVA内存模型/" class="article-date">
+      <time datetime="2016-01-04T14:10:36.000Z" itemprop="datePublished">2016-01-04</time>
 </a>
     </div>
   
@@ -208,7 +205,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      JAVA并发机制的底层实现原理
+      JAVA内存模型
     </h1>
   
 
@@ -229,31 +226,15 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p></p><h2>&emsp;关键字volatile</h2><p></p>
-<h4>1.volatile的定义</h4><br>    JAVA编程语言允许线程访问共享变量，为了确保共享变量能够被准备和一致地更新，线程应该确保通过排它锁单独获得这个变量。<br><br><h4>2.对有volatile变量修饰的共享变量进行写操作会汇编指令多出一行代码：Lock前缀指令。Lock前缀的指令在多核处理器下会引发以下两件事情</h4><br>    1.将当前处理器缓存行的数据回写到系统内存。<br>    2.这个写回内存操作会使得其他CPU里缓存了该内存地址的数据无效。<br><br><br><h4>3.如果对volatile变量进行写操作，JVM就会向处理器发送一条Lock前缀的命令，将这个变量所在缓存行的数据写回到系统内存中。</h4>
+        <h4>1.JAVA中的数据存储</h4><br>    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.<br>    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）<br>    3. 堆：存放所有new出来的对象。<br>    4. 静态域：存放静态成员（static定义的）<br>    5. 常量池：存放字符串常量和基本类型常量（public static final）。有时，在嵌入式系统中，常量本身会和其他部分分割离开(由于版权等其他原因)，所以在这种情况下，可以选择将其放在ROM中 。<br>    6. 非RAM存储：硬盘等永久存储空间<br><h4>2.关于JAVA内存模型</h4><br>&emsp;Java内存模型（简称JMM）决定一个线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存，每个线程都一个私有的本地内存，本地内存存储着该线程以读/写共享变量的副本。本地内存是个抽象概念，并不真实存在。<strong>JMM通过控制主内存与每个线程的本地内存之间的交互，来为Java程序猿提供内存可见性保证。</strong><br><h4>3.关于重排序</h4><br>&emsp;执行程序的时候，为了提高性能，编译器和处理器经常对指令进行重排序，重排序有三种：<br><br>    1.编译器优化的重排序<br>    2.指令级并行的重排序<br>    3.内存系统的重排序（由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行）<br>源代码-&gt;编译器优化重排序-&gt;指令级并行重排序-&gt;内存系统重排序-&gt;最终执行序列<br><h4>4.数据依赖</h4><br>    写后读，写后写，读后写。<br><h4>5.as-if-serial语义</h4><br>    不管怎么重排序，程序的执行结果不能被改变。<br><h4>6.处理器重排序影响程序执行结果的解决方法</h4><br>    对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定类型的内存屏障指令来禁止特定类型的处理器重排序。<br><h4>7.happens-before关系</h4><br>    在JMM中，如果一个操作的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。JMM通过happens-before关系向程序猿提供跨线程的内存可见性保证。<br><h4>8.重排序64位的写操作的结果</h4><br>    由于64位的long/double变量的写操作拆分为两个32位的写操作执行，两个32位的写操作可能会被分配到不同的总线事务中执行，此时，对这个64位变量的写操作将不具有原子性。但是jdk5开始，读具有原子性，仅允许拆分写。<br><h4>9.volatile变量的特性</h4>
 
-<p></p><h4>4.volatile的使用优化</h4><br>        追加字节优化性能：将共享变量追加到64字节。<br>         理由：如果队列的头节点和尾节点都不足64个字节，处理器会将它们读到同一个高速缓存行里面。在多处理器的情况下每个处理器都会缓存同样的头尾节点，当一个处理器师徒修改头节点时，将锁定整个缓存行，在缓存一致性机制的作用下，导致其他处理器不能访问自己告诉缓存中的尾节点，严重影响到队列的出队和入队的效率。<br>         注意：在以下情况下不应该将volatile变量追加到64字节<p></p>
-<pre><code>-  缓存行非64字节宽的处理器
--  共享变量不会被频繁写地（因为本身追加字节这种方式会带来一定的性能消耗）
-</code></pre><p></p><h2>&emsp;关键字synchronized</h2><p></p>
-<p></p><h4>1.Java的每一个对象都可以作为锁</h4><p></p>
-<pre><code>1. 对于普通同步方法，锁是当前实例对象；
-2. 对于静态同步方法，锁是当前类的Class对象；
-3. 对于同步方法快，锁是Synchronized括号里面配置的对象。
-</code></pre><p></p><h4>2.JAVA用的锁存在Java对象头里。</h4><br>    如果对象是数组类型，那么虚拟机就用3个字宽（Word）存储对象头；如果对象是非数组类型，则用2字宽存储对象头。因为如果是一个数组的话需要多一个字宽来表示数组的长度。<p></p>
-<p></p><h4>3.锁一共有四种状态，从低到高依次是：无锁状态，偏向锁状态，轻量级锁状态和重量级锁状态。锁可以升级但是不可以降级，这样的目的是为了提高获得和释放锁的效率。</h4><br>    1.偏向锁：会偏向第一个访问锁的线程，如果在接下来的过程中，该锁不会被其他线程访问，则持有该偏向锁的线程永远不需要触发同步。如果遇到其他线程抢占，那么持有偏向锁的线程将被挂起，JVM尝试消除它身上的偏向锁，将锁恢复到标准的轻量级锁。（偏向锁只在单线程下起作用。）（如果确定应用的所有的锁通常情况下处于竞争状态，可以通过JVM参数关闭偏向锁。）<br>    2.轻量级锁：为了优化Java的Lock机制才引进的，本意是为了减少多线程进入互斥的几率而不是替代互斥。<p></p>
-<pre><code>- 轻量级锁加锁：线程在执行同步块之前，JVM会先在当前线程的栈桢中，创建用于存储锁记录的空间，将对象头中得Mark Word复制到锁记录中，然后线程尝试使用CAS将对象头中的Mark Word替换为指向锁记录的指针。如果成功，当前线程获得锁。如果失败，表示其他线程竞争锁，当前线程便尝试使用自旋来获得锁。
- - 轻量级锁解锁：使用原子的CAS操作将Displaced Mark Word替换回到对象头，如果成功，则表示没有竞争发生，如果失败，表示当前锁存在竞争，锁就会膨胀成重量级锁。因为自旋会消耗CPU，为避免无用的自旋，一但升级成为重量级锁，就不会再恢复到轻量级锁状态。
-</code></pre><p><strong>关于锁的优缺点</strong></p>
-<p>待插入图片</p>
-<p></p><h4>4.处理器如何实现原子操作</h4><br>    1.通过总线锁保证原子性：当处理器输出一个Lock#信号，其他处理器的请求被阻塞，那么该处理器将可以独占共享内存。<br>    2.通过缓存锁定保证原子性：内存区域如果被缓存在处理器的缓存行里，并且在Lock操作期间被锁定，那么当它执行锁操作回写到内存时，处理器不在总线上发LOCK#信号，而是修改内部的地址，并允许它的缓存一次性机制保证操作的原子性，当其他处理器回写已被锁定的缓存行的数据时，会使缓存行无效。<br>两种情况下处理器不会使用缓存锁定：<p></p>
-<pre><code>- 当操作的数据不能被缓存在处理器内部，或操作的数据跨多个缓存行时，处理器会调用总线锁定；
-- 有些处理器不支持缓存锁定。
-</code></pre><p></p><h4>5.CAS实现原子操作的三个问题：</h4><p></p>
-<pre><code>- ABA问题（数值没变，但是版本变了）；
-- 循环时间长开销大(pause指令)；
-- 只能保证一个共享变量的原子操作（对多个共享变量操作，我们可以把多个共享变量合并成一个共享变量来操作）。
-</code></pre>
+<pre><code>1.可见性：对一个volatile变量的读，总是能看到任意线程对这个volatile变量最后的写入
+2.原子性
+</code></pre><p></p><h4>10.volatile写-读得内存语义</h4><br>    1.写：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存；<br>     2.读：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，并从主内存中读取共享变量。<p></p>
+<p></p><h4>11.JMM如何实现volatile的内存语义</h4><br>    为了保证能够正确实现volatile的内存语义，JMM可以选择在每个volatile写的后面或者每个volatile读的前面插入一个StoreLoad屏障。但是，为了考虑整体执行效率，JMM选择在每个volatile写的后面插入一个StoreLoad屏障。（首先保证正确性，再去考虑效率）<p></p>
+<p></p><h4>12.对于final域，编译器和处理器要遵守两个重排序规则</h4><br>    1.在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序；（写final域的操作不会重排序到构造器之外，但是在多线程环境下，普通的写操作会）<br>    2.初次读一个包含final域的对象的引用，与随后初次读这个域，这两个操作之间不能重排序。（ 初次读对象引用和初次读该对象包含的final域，这两个操作存在间接依赖的关系。即，在读一个对象final域之前，一定会先读包含这个final域的对象的引用。）<p></p>
+<p></p><h4>13.具有volatile变量的类在被new的时候</h4><br>    在构造函数返回前，被构造对象的引用不能为其他线程所见。（需要另一个保证：在构造函数内部，不能让这个被构造对象的引用为其他线程所见。如obj=this;这样的操作会使this引用溢出）<p></p>
+
       
     </div>
     
@@ -261,13 +242,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/01/03/JAVA并发机制的底层实现原理/">JAVA并发机制的底层实现原理</a></p>
+        <p><span>本文标题:</span><a href="/2016/01/04/JAVA内存模型/">JAVA内存模型</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Darren Yan 的个人博客">Darren Yan</a></p>
-        <p><span>发布时间:</span>2016年01月03日 - 22时54分</p>
-        <p><span>最后更新:</span>2016年01月04日 - 00时08分</p>
+        <p><span>发布时间:</span>2016年01月04日 - 22时10分</p>
+        <p><span>最后更新:</span>2016年01月04日 - 22时11分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/01/03/JAVA并发机制的底层实现原理/" title="JAVA并发机制的底层实现原理">http://yoursite.com/2016/01/03/JAVA并发机制的底层实现原理/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/01/03/JAVA并发机制的底层实现原理/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/04/JAVA内存模型/" title="JAVA内存模型">http://yoursite.com/2016/01/04/JAVA内存模型/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/01/04/JAVA内存模型/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -280,16 +261,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/04/JAVA内存模型/">
-                    JAVA内存模型
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/03/JAVA并发编程的挑战/">
-                    JAVA并发编程的挑战
+                <a href="/2016/01/03/JAVA并发机制的底层实现原理/">
+                    JAVA并发机制的底层实现原理
                 </a>
             </div>
         
@@ -300,7 +275,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text"> 关键字volatile</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.volatile的定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.2.</span> <span class="toc-text">2.对有volatile变量修饰的共享变量进行写操作会汇编指令多出一行代码：Lock前缀指令。Lock前缀的指令在多核处理器下会引发以下两件事情</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.3.</span> <span class="toc-text">3.如果对volatile变量进行写操作，JVM就会向处理器发送一条Lock前缀的命令，将这个变量所在缓存行的数据写回到系统内存中。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.4.</span> <span class="toc-text">4.volatile的使用优化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text"> 关键字synchronized</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.0.1.</span> <span class="toc-text">1.Java的每一个对象都可以作为锁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.0.2.</span> <span class="toc-text">2.JAVA用的锁存在Java对象头里。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.0.3.</span> <span class="toc-text">3.锁一共有四种状态，从低到高依次是：无锁状态，偏向锁状态，轻量级锁状态和重量级锁状态。锁可以升级但是不可以降级，这样的目的是为了提高获得和释放锁的效率。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.0.4.</span> <span class="toc-text">4.处理器如何实现原子操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.0.5.</span> <span class="toc-text">5.CAS实现原子操作的三个问题：</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1.JAVA中的数据存储</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2.关于JAVA内存模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3.关于重排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4.数据依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5.as-if-serial语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">6.处理器重排序影响程序执行结果的解决方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">7.</span> <span class="toc-text">7.happens-before关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">8.</span> <span class="toc-text">8.重排序64位的写操作的结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">9.</span> <span class="toc-text">9.volatile变量的特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">10.</span> <span class="toc-text">10.volatile写-读得内存语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">11.</span> <span class="toc-text">11.JMM如何实现volatile的内存语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">12.</span> <span class="toc-text">12.对于final域，编译器和处理器要遵守两个重排序规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">13.</span> <span class="toc-text">13.具有volatile变量的类在被new的时候</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -362,7 +337,7 @@
 
     <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/03/JAVA并发机制的底层实现原理/" data-title="JAVA并发机制的底层实现原理" data-url="http://yoursite.com/2016/01/03/JAVA并发机制的底层实现原理/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/04/JAVA内存模型/" data-title="JAVA内存模型" data-url="http://yoursite.com/2016/01/04/JAVA内存模型/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -389,15 +364,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/04/JAVA内存模型/" title="上一篇: JAVA内存模型">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/03/JAVA并发编程的挑战/" title="下一篇: JAVA并发编程的挑战">
+            <a href="/2016/01/03/JAVA并发机制的底层实现原理/" title="下一篇: JAVA并发机制的底层实现原理">
                 <i class="fa fa-angle-right"></i>
             </a>
         
