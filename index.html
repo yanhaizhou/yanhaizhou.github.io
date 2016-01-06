@@ -188,6 +188,93 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-JAVA双重检查锁定和延迟初始化" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/06/JAVA双重检查锁定和延迟初始化/" class="article-date">
+      <time datetime="2016-01-06T07:28:51.000Z" itemprop="datePublished">2016-01-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/06/JAVA双重检查锁定和延迟初始化/">JAVA双重检查锁定和延迟初始化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p></p><h4>双重检查锁定</h4><br>    class DoubleCheckedLocking {<br>          private static Instance instance ;<br>          public static Instance getInstance() {<br>            if (instance == null)<br>                  synchronized(DoubleCheckedLocking) {<br>                if (instance == null)<br>                      instance = new Instance();<br>                  }<br>            return instance;<br>           }<br>      }<br>在Java多线程程序中有时候需要延迟初始化来降低开销，但是如上的方法看似完美，却存在着如下问题：<p></p>
+<pre><code>在第一个判断instance不为空的时候，instance可能还没有初始化好。因为初始化对象并指向引用分为两个步骤，如果重排序这两个步骤，即还没有完成初始化就分配对象引用，这时候就造成了对象还没有初始化完。
+</code></pre><p>这时候有两个解决方案：</p>
+<pre><code>- 不要使初始化对象和分配对象引用这两个步骤重排序
+- 不要使其他线程看到这两个方法的重排序
+</code></pre><h5>两种解决方法：</h5><br>1.基于volatile的解决方案<br><br>     将instance定义为volatile变量，这样的话初始化对象和分配对象引用这两个步骤就不会被重排序了。（volatile关键字可以防止变量还没初始化就被引用）<br><br>2.基于类初始化的解决方案<br><br>     JVM在类的初始化阶段，会执行类的初始化。在执行类的初始化期间，JVM会去获取一个锁。这个锁可以同步多个线程对同一个类的初始化。（写一个静态类    ）<br>     public class InstanceFactory{<br>          private static class InstanceHolder{<br>               public static Instance instance = new Instance();<br>          }<br>          public static Instance getInstance(){<br>               return InstanceHolder.instance;<br>          }<br>     }<br>    每个线程以获取到初始化锁，先判断初始化锁的初始化状态，如果还没初始化过这个类那就进行初始化，那么InstanceHolder将会被初始化；如果正在初始化，那么就退出锁，等待初始化完毕再重新进入。如果初始化过了，那就不用管类的初始化了。<br><br><br><h5>比较两种解决方案：</h5>
+
+<pre><code>-  基于类初始化的方案的实现代码更简洁
+-  基于volatile的方案不仅可以对静态字段实现延迟初始化，还可以对实例字段实现延迟初始化。
+</code></pre><p>综上，如果需要对实例字段延迟初始化，应该使用基于volatile的解决方案；如果需要对静态字段延迟初始化，则采用基于类初始化的方案。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: true,
+            isPost: false,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+
+  
     <article id="post-JAVA内存模型" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

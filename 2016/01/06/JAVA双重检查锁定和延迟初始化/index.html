@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>JAVA内存模型 | Darren Yan’s Blog</title>
+  <title>JAVA双重检查锁定和延迟初始化 | Darren Yan’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.JAVA中的数据存储    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）    3. 堆：存放所有new出来的对象。    4. 静态域：存放静态成员（static定义的）    5">
+  <meta name="description" content="双重检查锁定    class DoubleCheckedLocking {          private static Instance instance ;          public static Instance getInstance() {            if (instance == null)                  synchronized(Double">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JAVA内存模型">
-<meta property="og:url" content="http://yoursite.com/2016/01/04/JAVA内存模型/index.html">
+<meta property="og:title" content="JAVA双重检查锁定和延迟初始化">
+<meta property="og:url" content="http://yoursite.com/2016/01/06/JAVA双重检查锁定和延迟初始化/index.html">
 <meta property="og:site_name" content="Darren Yan’s Blog">
-<meta property="og:description" content="1.JAVA中的数据存储    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）    3. 堆：存放所有new出来的对象。    4. 静态域：存放静态成员（static定义的）    5">
-<meta property="og:updated_time" content="2016-01-04T14:11:58.000Z">
+<meta property="og:description" content="双重检查锁定    class DoubleCheckedLocking {          private static Instance instance ;          public static Instance getInstance() {            if (instance == null)                  synchronized(Double">
+<meta property="og:updated_time" content="2016-01-06T09:55:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JAVA内存模型">
-<meta name="twitter:description" content="1.JAVA中的数据存储    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）    3. 堆：存放所有new出来的对象。    4. 静态域：存放静态成员（static定义的）    5">
+<meta name="twitter:title" content="JAVA双重检查锁定和延迟初始化">
+<meta name="twitter:description" content="双重检查锁定    class DoubleCheckedLocking {          private static Instance instance ;          public static Instance getInstance() {            if (instance == null)                  synchronized(Double">
   
   
     <link rel="icon" href="/favicon.png">
@@ -184,11 +184,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-JAVA内存模型" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-JAVA双重检查锁定和延迟初始化" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/04/JAVA内存模型/" class="article-date">
-      <time datetime="2016-01-04T14:10:36.000Z" itemprop="datePublished">2016-01-04</time>
+      <a href="/2016/01/06/JAVA双重检查锁定和延迟初始化/" class="article-date">
+      <time datetime="2016-01-06T07:28:51.000Z" itemprop="datePublished">2016-01-06</time>
 </a>
     </div>
   
@@ -201,7 +201,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      JAVA内存模型
+      JAVA双重检查锁定和延迟初始化
     </h1>
   
 
@@ -222,14 +222,16 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4>1.JAVA中的数据存储</h4><br>    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.<br>    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）<br>    3. 堆：存放所有new出来的对象。<br>    4. 静态域：存放静态成员（static定义的）<br>    5. 常量池：存放字符串常量和基本类型常量（public static final）。有时，在嵌入式系统中，常量本身会和其他部分分割离开(由于版权等其他原因)，所以在这种情况下，可以选择将其放在ROM中 。<br>    6. 非RAM存储：硬盘等永久存储空间<br><h4>2.关于JAVA内存模型</h4><br>&emsp;Java内存模型（简称JMM）决定一个线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存，每个线程都一个私有的本地内存，本地内存存储着该线程以读/写共享变量的副本。本地内存是个抽象概念，并不真实存在。<strong>JMM通过控制主内存与每个线程的本地内存之间的交互，来为Java程序猿提供内存可见性保证。</strong><br><h4>3.关于重排序</h4><br>&emsp;执行程序的时候，为了提高性能，编译器和处理器经常对指令进行重排序，重排序有三种：<br><br>    1.编译器优化的重排序<br>    2.指令级并行的重排序<br>    3.内存系统的重排序（由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行）<br>源代码-&gt;编译器优化重排序-&gt;指令级并行重排序-&gt;内存系统重排序-&gt;最终执行序列<br><h4>4.数据依赖</h4><br>    写后读，写后写，读后写。<br><h4>5.as-if-serial语义</h4><br>    不管怎么重排序，程序的执行结果不能被改变。<br><h4>6.处理器重排序影响程序执行结果的解决方法</h4><br>    对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定类型的内存屏障指令来禁止特定类型的处理器重排序。<br><h4>7.happens-before关系</h4><br>    在JMM中，如果一个操作的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。JMM通过happens-before关系向程序猿提供跨线程的内存可见性保证。<br><h4>8.重排序64位的写操作的结果</h4><br>    由于64位的long/double变量的写操作拆分为两个32位的写操作执行，两个32位的写操作可能会被分配到不同的总线事务中执行，此时，对这个64位变量的写操作将不具有原子性。但是jdk5开始，读具有原子性，仅允许拆分写。<br><h4>9.volatile变量的特性</h4>
+        <p></p><h4>双重检查锁定</h4><br>    class DoubleCheckedLocking {<br>          private static Instance instance ;<br>          public static Instance getInstance() {<br>            if (instance == null)<br>                  synchronized(DoubleCheckedLocking) {<br>                if (instance == null)<br>                      instance = new Instance();<br>                  }<br>            return instance;<br>           }<br>      }<br>在Java多线程程序中有时候需要延迟初始化来降低开销，但是如上的方法看似完美，却存在着如下问题：<p></p>
+<pre><code>在第一个判断instance不为空的时候，instance可能还没有初始化好。因为初始化对象并指向引用分为两个步骤，如果重排序这两个步骤，即还没有完成初始化就分配对象引用，这时候就造成了对象还没有初始化完。
+</code></pre><p>这时候有两个解决方案：</p>
+<pre><code>- 不要使初始化对象和分配对象引用这两个步骤重排序
+- 不要使其他线程看到这两个方法的重排序
+</code></pre><h5>两种解决方法：</h5><br>1.基于volatile的解决方案<br><br>     将instance定义为volatile变量，这样的话初始化对象和分配对象引用这两个步骤就不会被重排序了。（volatile关键字可以防止变量还没初始化就被引用）<br><br>2.基于类初始化的解决方案<br><br>     JVM在类的初始化阶段，会执行类的初始化。在执行类的初始化期间，JVM会去获取一个锁。这个锁可以同步多个线程对同一个类的初始化。（写一个静态类    ）<br>     public class InstanceFactory{<br>          private static class InstanceHolder{<br>               public static Instance instance = new Instance();<br>          }<br>          public static Instance getInstance(){<br>               return InstanceHolder.instance;<br>          }<br>     }<br>    每个线程以获取到初始化锁，先判断初始化锁的初始化状态，如果还没初始化过这个类那就进行初始化，那么InstanceHolder将会被初始化；如果正在初始化，那么就退出锁，等待初始化完毕再重新进入。如果初始化过了，那就不用管类的初始化了。<br><br><br><h5>比较两种解决方案：</h5>
 
-<pre><code>1.可见性：对一个volatile变量的读，总是能看到任意线程对这个volatile变量最后的写入
-2.原子性
-</code></pre><p></p><h4>10.volatile写-读得内存语义</h4><br>    1.写：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存；<br>     2.读：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，并从主内存中读取共享变量。<p></p>
-<p></p><h4>11.JMM如何实现volatile的内存语义</h4><br>    为了保证能够正确实现volatile的内存语义，JMM可以选择在每个volatile写的后面或者每个volatile读的前面插入一个StoreLoad屏障。但是，为了考虑整体执行效率，JMM选择在每个volatile写的后面插入一个StoreLoad屏障。（首先保证正确性，再去考虑效率）<p></p>
-<p></p><h4>12.对于final域，编译器和处理器要遵守两个重排序规则</h4><br>    1.在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序；（写final域的操作不会重排序到构造器之外，但是在多线程环境下，普通的写操作会）<br>    2.初次读一个包含final域的对象的引用，与随后初次读这个域，这两个操作之间不能重排序。（ 初次读对象引用和初次读该对象包含的final域，这两个操作存在间接依赖的关系。即，在读一个对象final域之前，一定会先读包含这个final域的对象的引用。）<p></p>
-<p></p><h4>13.具有volatile变量的类在被new的时候</h4><br>    在构造函数返回前，被构造对象的引用不能为其他线程所见。（需要另一个保证：在构造函数内部，不能让这个被构造对象的引用为其他线程所见。如obj=this;这样的操作会使this引用溢出）<p></p>
+<pre><code>-  基于类初始化的方案的实现代码更简洁
+-  基于volatile的方案不仅可以对静态字段实现延迟初始化，还可以对实例字段实现延迟初始化。
+</code></pre><p>综上，如果需要对实例字段延迟初始化，应该使用基于volatile的解决方案；如果需要对静态字段延迟初始化，则采用基于类初始化的方案。</p>
 
       
     </div>
@@ -238,13 +240,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/01/04/JAVA内存模型/">JAVA内存模型</a></p>
+        <p><span>本文标题:</span><a href="/2016/01/06/JAVA双重检查锁定和延迟初始化/">JAVA双重检查锁定和延迟初始化</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Darren Yan 的个人博客">Darren Yan</a></p>
-        <p><span>发布时间:</span>2016年01月04日 - 22时10分</p>
-        <p><span>最后更新:</span>2016年01月04日 - 22时11分</p>
+        <p><span>发布时间:</span>2016年01月06日 - 15时28分</p>
+        <p><span>最后更新:</span>2016年01月06日 - 17时55分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/01/04/JAVA内存模型/" title="JAVA内存模型">http://yoursite.com/2016/01/04/JAVA内存模型/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/01/04/JAVA内存模型/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/06/JAVA双重检查锁定和延迟初始化/" title="JAVA双重检查锁定和延迟初始化">http://yoursite.com/2016/01/06/JAVA双重检查锁定和延迟初始化/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/01/06/JAVA双重检查锁定和延迟初始化/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -257,16 +259,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/06/JAVA双重检查锁定和延迟初始化/">
-                    JAVA双重检查锁定和延迟初始化
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/03/JAVA并发机制的底层实现原理/">
-                    JAVA并发机制的底层实现原理
+                <a href="/2016/01/04/JAVA内存模型/">
+                    JAVA内存模型
                 </a>
             </div>
         
@@ -277,7 +273,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1.JAVA中的数据存储</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2.关于JAVA内存模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3.关于重排序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4.数据依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5.as-if-serial语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">6.处理器重排序影响程序执行结果的解决方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">7.</span> <span class="toc-text">7.happens-before关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">8.</span> <span class="toc-text">8.重排序64位的写操作的结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">9.</span> <span class="toc-text">9.volatile变量的特性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">10.</span> <span class="toc-text">10.volatile写-读得内存语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">11.</span> <span class="toc-text">11.JMM如何实现volatile的内存语义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">12.</span> <span class="toc-text">12.对于final域，编译器和处理器要遵守两个重排序规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">13.</span> <span class="toc-text">13.具有volatile变量的类在被new的时候</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">双重检查锁定</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.1.</span> <span class="toc-text">两种解决方法：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.2.</span> <span class="toc-text">比较两种解决方案：</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -339,7 +335,7 @@
 
     <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/04/JAVA内存模型/" data-title="JAVA内存模型" data-url="http://yoursite.com/2016/01/04/JAVA内存模型/"></div>
+    <div class="ds-thread" data-thread-key="2016/01/06/JAVA双重检查锁定和延迟初始化/" data-title="JAVA双重检查锁定和延迟初始化" data-url="http://yoursite.com/2016/01/06/JAVA双重检查锁定和延迟初始化/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -366,15 +362,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/06/JAVA双重检查锁定和延迟初始化/" title="上一篇: JAVA双重检查锁定和延迟初始化">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/03/JAVA并发机制的底层实现原理/" title="下一篇: JAVA并发机制的底层实现原理">
+            <a href="/2016/01/04/JAVA内存模型/" title="下一篇: JAVA内存模型">
                 <i class="fa fa-angle-right"></i>
             </a>
         
