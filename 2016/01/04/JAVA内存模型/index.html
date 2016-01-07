@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://yoursite.com/2016/01/04/JAVA内存模型/index.html">
 <meta property="og:site_name" content="Darren Yan’s Blog">
 <meta property="og:description" content="1.JAVA中的数据存储    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）    3. 堆：存放所有new出来的对象。    4. 静态域：存放静态成员（static定义的）    5">
-<meta property="og:updated_time" content="2016-01-04T14:11:58.000Z">
+<meta property="og:updated_time" content="2016-01-07T07:33:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA内存模型">
 <meta name="twitter:description" content="1.JAVA中的数据存储    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）    3. 堆：存放所有new出来的对象。    4. 静态域：存放静态成员（static定义的）    5">
@@ -114,7 +114,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 10px;">JAVA并发编程的艺术</a>
+                        <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 20px;">JAVA并发编程的艺术</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
                     </div>
                 </section>
                 
@@ -222,7 +222,7 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4>1.JAVA中的数据存储</h4><br>    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.<br>    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）<br>    3. 堆：存放所有new出来的对象。<br>    4. 静态域：存放静态成员（static定义的）<br>    5. 常量池：存放字符串常量和基本类型常量（public static final）。有时，在嵌入式系统中，常量本身会和其他部分分割离开(由于版权等其他原因)，所以在这种情况下，可以选择将其放在ROM中 。<br>    6. 非RAM存储：硬盘等永久存储空间<br><h4>2.关于JAVA内存模型</h4><br>&emsp;Java内存模型（简称JMM）决定一个线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存，每个线程都一个私有的本地内存，本地内存存储着该线程以读/写共享变量的副本。本地内存是个抽象概念，并不真实存在。<strong>JMM通过控制主内存与每个线程的本地内存之间的交互，来为Java程序猿提供内存可见性保证。</strong><br><h4>3.关于重排序</h4><br>&emsp;执行程序的时候，为了提高性能，编译器和处理器经常对指令进行重排序，重排序有三种：<br><br>    1.编译器优化的重排序<br>    2.指令级并行的重排序<br>    3.内存系统的重排序（由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行）<br>源代码-&gt;编译器优化重排序-&gt;指令级并行重排序-&gt;内存系统重排序-&gt;最终执行序列<br><h4>4.数据依赖</h4><br>    写后读，写后写，读后写。<br><h4>5.as-if-serial语义</h4><br>    不管怎么重排序，程序的执行结果不能被改变。<br><h4>6.处理器重排序影响程序执行结果的解决方法</h4><br>    对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定类型的内存屏障指令来禁止特定类型的处理器重排序。<br><h4>7.happens-before关系</h4><br>    在JMM中，如果一个操作的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。JMM通过happens-before关系向程序猿提供跨线程的内存可见性保证。<br><h4>8.重排序64位的写操作的结果</h4><br>    由于64位的long/double变量的写操作拆分为两个32位的写操作执行，两个32位的写操作可能会被分配到不同的总线事务中执行，此时，对这个64位变量的写操作将不具有原子性。但是jdk5开始，读具有原子性，仅允许拆分写。<br><h4>9.volatile变量的特性</h4>
+        <h4>1.JAVA中的数据存储</h4><br>    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.<br>    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）<br>    3. 堆：存放所有new出来的对象。<br>    4. 静态域：存放静态成员（static定义的）<br>    5. 常量池：存放字符串常量和基本类型常量（public static final）。有时，在嵌入式系统中，常量本身会和其他部分分割离开(由于版权等其他原因)，所以在这种情况下，可以选择将其放在ROM中 。<br>    6. 非RAM存储：硬盘等永久存储空间<br><h4>2.关于JAVA内存模型</h4><br>&emsp;Java内存模型（简称JMM）决定一个线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存，每个线程都一个私有的本地内存，本地内存存储着该线程以读/写共享变量的副本。本地内存是个抽象概念，并不真实存在。<strong>JMM通过控制主内存与每个线程的本地内存之间的交互，来为Java程序猿提供内存可见性保证。</strong><br><h4>3.关于重排序</h4><br>&emsp;执行程序的时候，为了提高性能，编译器和处理器经常对指令进行重排序，重排序有三种：<br><br>    1.编译器优化的重排序<br>    2.指令级并行的重排序<br>    3.内存系统的重排序（由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行）<br>源代码-&gt;编译器优化重排序-&gt;指令级并行重排序-&gt;内存系统重排序-&gt;最终执行序列<br><br><h4>4.数据依赖</h4><br>    写后读，写后写，读后写。<br><h4>5.as-if-serial语义</h4><br>    不管怎么重排序，程序的执行结果不能被改变。<br><h4>6.处理器重排序影响程序执行结果的解决方法</h4><br>    对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定类型的内存屏障指令来禁止特定类型的处理器重排序。<br><h4>7.happens-before关系</h4><br>    在JMM中，如果一个操作的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。JMM通过happens-before关系向程序猿提供跨线程的内存可见性保证。<br><h4>8.重排序64位的写操作的结果</h4><br>    由于64位的long/double变量的写操作拆分为两个32位的写操作执行，两个32位的写操作可能会被分配到不同的总线事务中执行，此时，对这个64位变量的写操作将不具有原子性。但是jdk5开始，读具有原子性，仅允许拆分写。<br><h4>9.volatile变量的特性</h4>
 
 <pre><code>1.可见性：对一个volatile变量的读，总是能看到任意线程对这个volatile变量最后的写入
 2.原子性
@@ -241,7 +241,7 @@
         <p><span>本文标题:</span><a href="/2016/01/04/JAVA内存模型/">JAVA内存模型</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Darren Yan 的个人博客">Darren Yan</a></p>
         <p><span>发布时间:</span>2016年01月04日 - 22时10分</p>
-        <p><span>最后更新:</span>2016年01月04日 - 22时11分</p>
+        <p><span>最后更新:</span>2016年01月07日 - 15时33分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/01/04/JAVA内存模型/" title="JAVA内存模型">http://yoursite.com/2016/01/04/JAVA内存模型/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/01/04/JAVA内存模型/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -380,7 +380,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/06/JAVA双重检查锁定和延迟初始化/">JAVA双重检查锁定和延迟初始化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/04/JAVA内存模型/">JAVA内存模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/03/JAVA并发机制的底层实现原理/">JAVA并发机制的底层实现原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/01/hello-world/">Hello World</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/07/立足2016/">立足2016</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/06/JAVA双重检查锁定和延迟初始化/">JAVA双重检查锁定和延迟初始化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/04/JAVA内存模型/">JAVA内存模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/03/JAVA并发机制的底层实现原理/">JAVA并发机制的底层实现原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/01/hello-world/">Hello World</a></li></ul>
     <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
