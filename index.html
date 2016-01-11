@@ -116,7 +116,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 20px;">JAVA并发编程的艺术</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
+                        <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 20px;">JAVA并发编程的艺术</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
                     </div>
                 </section>
                 
@@ -187,6 +187,102 @@
     </div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Android系统架构" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/11/Android系统架构/" class="article-date">
+      <time datetime="2016-01-11T13:42:16.000Z" itemprop="datePublished">2016-01-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/11/Android系统架构/">Android系统构架</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&emsp;这几天都没有写笔记，因为好忙啊- -忙了搞数据库课设，表建了又拆，拆了又合，果然后台建表也是有逻辑的。可是我知道好忙不是借口，所以还是坚持来写。<br>今天我想总结一下Android的系统构架<br><img src="http://static.oschina.net/uploads/space/2014/1128/111556_29cA_168814.jpeg" alt=""></p>
+<p>由上图的Android系统框图可以知道Android由底层往上分为4个主要功能层，分别是</p>
+<pre><code>+linux内核层（Linux Kernel）
++系统运行时库层（Libraries和Android Runtime）
++应用程序架构层（Application Framework）
++应用程序层（Applications）
+</code></pre><h4>linux内核层（Linux Kernel）</h4><br>&emsp;Linux内核层是<strong>硬件和软件层之间的抽象层，隐藏底层硬件细节，上层提供统一服务</strong>。包含了很多硬件驱动，如显示驱动、摄像头驱动、蓝牙驱动、闪存驱动、IPC管道通讯驱动、USB驱动、键盘驱动、Wi-Fi无线驱动、音频驱动和电源管理驱动。<br><br><h4>Android运行库</h4>
+
+<p></p><h5>&emsp;1.Android运行时</h5><br>&emsp;Android运行时包含<strong>核心库</strong>和<strong>Dalvik虚拟机</strong>两部分。<p></p>
+<pre><code>+核心库：提供大部分在JAVA编程语言核心类库中可用的功能。
++Dalvik虚拟机：是能在一个设备上高效运行多个虚拟机的设备。每个Android应用程序都在自己的进程中运行，而每个进程都有一个属于自己的Dalvik虚拟机。Dalvik虚拟机依赖于Linux内核提供基本功能，如线程和底层内存管理。
+</code></pre><p></p><h6>&emsp;JAVA虚拟机JVM与Dalvik虚拟机的区别</h6><br>    1.JVM运行的是JAVA字节码，而Dalvik虚拟机运行的是专有的文件格式DEX（Dalvik Executable）。DEX文件是由传统编译产生的class文件经dx工具软件处理后生成。Dalvik虚拟机将所有的class文件整合到一个文件中，减少冗余，提高性能。且DEX文件可以进一步优化，提高运行性能。<br>    2.JVM基于栈，Dalvik基于寄存器。一般认为，基于寄存器的实现虽然更多依赖于具体的CPU结构，硬件通用性差，但是使用的是等长命令，在效率速度上比传统的JVM更加有优势。<p></p>
+<p></p><h5>&emsp;2.Android系统库Android</h5><br>&emsp;系统类库大部分由C++边写，提供的功能开发者可以通过Android应用框架去调用。<p></p>
+<p></p><h5>应用程序架构层（Application Framework）</h5><br>&emsp;开发人员也可以完全访问核心应用程序所使用的API框架。该应用程序的架构设计简化了组件的重用;任何一个应用程序都可以发布它的功能块并且任何其它的应用程序都可以使用其所发布的功能块(不过得遵循框架的安全性限制)。同样，该应用程序重用机制也使用户可以方便的替换程序组件。<p></p>
+<p></p><h5>应用程序层（Applications）</h5><br>&emsp;包含核心应用程序，如桌面，联系人等。<p></p>
+<p>资料参考</p>
+<p><a href="http://blog.csdn.net/johnny901114/article/details/8289997" target="_blank" rel="external">http://blog.csdn.net/johnny901114/article/details/8289997</a></p>
+<p><a href="http://my.oschina.net/fhd/blog/349830" target="_blank" rel="external">http://my.oschina.net/fhd/blog/349830</a></p>
+<p>《深入理解Android网络编程》</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: true,
+            isPost: false,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+
   
     <article id="post-JAVA中的线程池" class="article article-type-post" itemscope itemprop="blogPost">
   
