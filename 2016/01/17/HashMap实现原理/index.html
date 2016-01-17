@@ -3,17 +3,23 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Darren Yan’s Blog</title>
+  <title>HashMap实现原理 | Darren Yan’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Darren Yan’s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="数据结构中的哈希表&amp;emsp;涉及容器，我们不可避免总要联系到数据结构。数据结构是编程语言的基础这句话显得越来越有意思。
+&amp;emsp;哈希表是一种以key-value存储数据的结构。只要输入key，就可以查到对应的value。而数据存储的位置呢是由预先定义好的函数生成的。存储的时候生成地址存进去，查找的时候也用函数生成地址，找到目的位置，取出数据。而且，这个地址空间是有限的，所以地址可能会重复，也">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HashMap实现原理">
+<meta property="og:url" content="http://yoursite.com/2016/01/17/HashMap实现原理/index.html">
 <meta property="og:site_name" content="Darren Yan’s Blog">
-<meta property="og:description">
+<meta property="og:description" content="数据结构中的哈希表&amp;emsp;涉及容器，我们不可避免总要联系到数据结构。数据结构是编程语言的基础这句话显得越来越有意思。
+&amp;emsp;哈希表是一种以key-value存储数据的结构。只要输入key，就可以查到对应的value。而数据存储的位置呢是由预先定义好的函数生成的。存储的时候生成地址存进去，查找的时候也用函数生成地址，找到目的位置，取出数据。而且，这个地址空间是有限的，所以地址可能会重复，也">
+<meta property="og:image" content="http://images.cnitblog.com/blog/94031/201410/312300363318272.png">
+<meta property="og:image" content="http://images.cnitblog.com/blog/94031/201410/312300395342227.png">
+<meta property="og:updated_time" content="2016-01-17T15:37:45.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Darren Yan’s Blog">
-<meta name="twitter:description">
+<meta name="twitter:title" content="HashMap实现原理">
+<meta name="twitter:description" content="数据结构中的哈希表&amp;emsp;涉及容器，我们不可避免总要联系到数据结构。数据结构是编程语言的基础这句话显得越来越有意思。
+&amp;emsp;哈希表是一种以key-value存储数据的结构。只要输入key，就可以查到对应的value。而数据存储的位置呢是由预先定义好的函数生成的。存储的时候生成地址存进去，查找的时候也用函数生成地址，找到目的位置，取出数据。而且，这个地址空间是有限的，所以地址可能会重复，也">
   
   
     <link rel="icon" href="/favicon.png">
@@ -21,9 +27,6 @@
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  
-    
-    
   
 </head>
 <body>
@@ -186,9 +189,7 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-HashMap实现原理" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-HashMap实现原理" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2016/01/17/HashMap实现原理/" class="article-date">
@@ -204,12 +205,23 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/17/HashMap实现原理/">HashMap实现原理</a>
+    <h1 class="article-title" itemprop="name">
+      HashMap实现原理
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA容器/">JAVA容器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA源码分析/">JAVA源码分析</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -259,23 +271,121 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA容器/">JAVA容器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA源码分析/">JAVA源码分析</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/01/17/HashMap实现原理/">HashMap实现原理</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Darren Yan 的个人博客">Darren Yan</a></p>
+        <p><span>发布时间:</span>2016年01月17日 - 10时57分</p>
+        <p><span>最后更新:</span>2016年01月17日 - 23时37分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/01/17/HashMap实现原理/" title="HashMap实现原理">http://yoursite.com/2016/01/17/HashMap实现原理/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/01/17/HashMap实现原理/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/01/11/Android系统架构/">
+                    Android系统构架
+                </a>
+            </div>
+        
+    </nav>
+
   
 </article>
 
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">数据结构中的哈希表</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">JAVA中的HashMap</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
+<script>
+    var toc_button = document.getElementById("tocButton");
+    var toc_div = document.getElementById("toc");
+    toc_button.onclick=function() {
+        if (toc_div.style.display == "none") {
+            toc_div.style.display = "block";
+            toc_button.value = "隐藏目录";
+            document.getElementById("switch-btn").style.display = "none";
+            document.getElementById("switch-area").style.display = "none";
+        }
+        else {
+            toc_div.style.display = "none";
+            toc_button.value = "显示目录";
+            document.getElementById("switch-btn").style.display = "block";
+            document.getElementById("switch-area").style.display = "block";
+        }
+    }
+
+    if ($(".toc").length < 1) {
+        $("#toc").css("display","none");
+        $("#tocButton").css("display","none");
+        $(".switch-btn").css("display","block");
+        $(".switch-area").css("display","block");
+    }
+</script>
+
+
+
+
+<div class="share">
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more"></a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+    <a href="#" class="bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+    <a href="#" class="bds_copy" data-cmd="copy" title="复制网址"></a>
+    <a href="#" class="bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+    </div>
+    <script>
+        window._bd_share_config={
+            "common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+    </script>
+</div>
+
+
+
+    <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/01/17/HashMap实现原理/" data-title="HashMap实现原理" data-url="http://yoursite.com/2016/01/17/HashMap实现原理/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"darrenyan"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
 
 
 
@@ -283,6 +393,38 @@
 
 
 
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/01/11/Android系统架构/" title="下一篇: Android系统构架">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/01/17/HashMap实现原理/">HashMap实现原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/11/Android系统架构/">Android系统构架</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/07/JAVA中的线程池/">JAVA中的线程池</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/07/立足2016/">立足2016</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/06/JAVA双重检查锁定和延迟初始化/">JAVA双重检查锁定和延迟初始化</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/04/JAVA内存模型/">JAVA内存模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/03/JAVA并发机制的底层实现原理/">JAVA并发机制的底层实现原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/01/01/hello-world/">Hello World</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200);
+            }
+            else {
+                $(".switch-btn, .switch-area").toggle(200);
+            }
+        })
+    </script>
 
 
 
@@ -294,8 +436,8 @@
             fancybox: true,
             mathjax: true,
             animate: true,
-            isHome: true,
-            isPost: false,
+            isHome: false,
+            isPost: true,
             isArchive: false,
             isTag: false,
             isCategory: false,
@@ -303,720 +445,6 @@
             }
         </script>
         
-
-  
-    <article id="post-Android系统架构" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/11/Android系统架构/" class="article-date">
-      <time datetime="2016-01-11T13:42:16.000Z" itemprop="datePublished">2016-01-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/11/Android系统架构/">Android系统构架</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>&emsp;这几天都没有写笔记，因为好忙啊- -忙了搞数据库课设，表建了又拆，拆了又合，果然后台建表也是有逻辑的。可是我知道好忙不是借口，所以还是坚持来写。<br>今天我想总结一下Android的系统构架<br><img src="http://static.oschina.net/uploads/space/2014/1128/111556_29cA_168814.jpeg" alt=""></p>
-<p>由上图的Android系统框图可以知道Android由底层往上分为4个主要功能层，分别是</p>
-<pre><code>+linux内核层（Linux Kernel）
-+系统运行时库层（Libraries和Android Runtime）
-+应用程序架构层（Application Framework）
-+应用程序层（Applications）
-</code></pre><h4>linux内核层（Linux Kernel）</h4><br>&emsp;Linux内核层是<strong>硬件和软件层之间的抽象层，隐藏底层硬件细节，上层提供统一服务</strong>。包含了很多硬件驱动，如显示驱动、摄像头驱动、蓝牙驱动、闪存驱动、IPC管道通讯驱动、USB驱动、键盘驱动、Wi-Fi无线驱动、音频驱动和电源管理驱动。<br><br><h4>Android运行库</h4>
-
-<p></p><h5>&emsp;1.Android运行时</h5><br>&emsp;Android运行时包含<strong>核心库</strong>和<strong>Dalvik虚拟机</strong>两部分。<p></p>
-<pre><code>+核心库：提供大部分在JAVA编程语言核心类库中可用的功能。
-+Dalvik虚拟机：是能在一个设备上高效运行多个虚拟机的设备。每个Android应用程序都在自己的进程中运行，而每个进程都有一个属于自己的Dalvik虚拟机。Dalvik虚拟机依赖于Linux内核提供基本功能，如线程和底层内存管理。
-</code></pre><p></p><h6>&emsp;JAVA虚拟机JVM与Dalvik虚拟机的区别</h6><br>    1.JVM运行的是JAVA字节码，而Dalvik虚拟机运行的是专有的文件格式DEX（Dalvik Executable）。DEX文件是由传统编译产生的class文件经dx工具软件处理后生成。Dalvik虚拟机将所有的class文件整合到一个文件中，减少冗余，提高性能。且DEX文件可以进一步优化，提高运行性能。<br>    2.JVM基于栈，Dalvik基于寄存器。一般认为，基于寄存器的实现虽然更多依赖于具体的CPU结构，硬件通用性差，但是使用的是等长命令，在效率速度上比传统的JVM更加有优势。<p></p>
-<p></p><h5>&emsp;2.Android系统库Android</h5><br>&emsp;系统类库大部分由C++边写，提供的功能开发者可以通过Android应用框架去调用。<p></p>
-<p></p><h5>应用程序架构层（Application Framework）</h5><br>&emsp;开发人员也可以完全访问核心应用程序所使用的API框架。该应用程序的架构设计简化了组件的重用;任何一个应用程序都可以发布它的功能块并且任何其它的应用程序都可以使用其所发布的功能块(不过得遵循框架的安全性限制)。同样，该应用程序重用机制也使用户可以方便的替换程序组件。<p></p>
-<p></p><h5>应用程序层（Applications）</h5><br>&emsp;包含核心应用程序，如桌面，联系人等。<p></p>
-<p>资料参考</p>
-<p><a href="http://blog.csdn.net/johnny901114/article/details/8289997" target="_blank" rel="external">http://blog.csdn.net/johnny901114/article/details/8289997</a></p>
-<p><a href="http://my.oschina.net/fhd/blog/349830" target="_blank" rel="external">http://my.oschina.net/fhd/blog/349830</a></p>
-<p>《深入理解Android网络编程》</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-JAVA中的线程池" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/07/JAVA中的线程池/" class="article-date">
-      <time datetime="2016-01-07T09:14:30.000Z" itemprop="datePublished">2016-01-07</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/07/JAVA中的线程池/">JAVA中的线程池</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p></p><h5>线程池的三大好处</h5><p></p>
-<pre><code>* 降低资源消耗（减低线程的创建和销毁带来的消耗）
-* 提高响应速度（不需要等待线程创建就能马上执行）
-* 提高线程的可管理性
-</code></pre><p></p><h5>线程池的主要工作步骤</h5><br><img src="http://7xpvqt.com1.z0.glb.clouddn.com/JAVA%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%B7%A5%E4%BD%9C%E6%AD%A5%E9%AA%A4.jpg" alt=""><p></p>
-<p></p><h5>向线程池提交任务有两种方法：</h5><p></p>
-<pre><code>* execute()用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功。
-* submit()用于提交需要返回值的任务。线程池会返回一个future对象，我们可以通过这个对象判断任务是否执行成功。
-</code></pre><p></p><h5>关闭线程池有两个方法</h5><br>    shutdown和shutdownNow，原理是遍历线程池的工作线程，然后逐个调用线程的interrupt方法中断线程，所以无法响应中断的任务是无法被终止的。通常使用shutdown关闭线程池，如果线程池中的任务不一定要被执行完，则可以调用shutdownNow方法。<p></p>
-<p><strong>线程池的队列最好使用有界队列：能增加系统的稳定性和预警能力。如果任务都很慢，有界队列满了的话任务会发出异常，我们容易排查错误。但是如果是无界队列，那队列越来越多，撑满内存，从而导致整个系统不能用。</strong></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-立足2016" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/07/立足2016/" class="article-date">
-      <time datetime="2016-01-07T06:59:34.000Z" itemprop="datePublished">2016-01-07</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/07/立足2016/">立足2016</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>&emsp;立足2016，之所以以此为题，是因为最近刚过了元旦，回头看是急忙走过的2015，向前看是正在经历的2016。</p>
-<p>&emsp;现在大概是自己学习Android编程一年半的时间点，其实我很想问问自己到底在这一年半里为自己的选择付出了什么。</p>
-<p></p><h5>关于社团</h5><br>&emsp;2015上半年也就是大二下学期，我有社团，有篮球队，有工作室。我想这是我最忙碌的半年吧，本来打算退了社团，因为部门部长一共有6个，就算我走了他们也可以hold住。但是小伙伴们都挽留我，任性地叫我忙的话就不用来社团这边了，有空过来就行了。感情还是在的，于是我留下来了。可是以我的性格，怎么可能留在那里却没有干事情，那不是一个负责任的我。<p></p>
-<p></p><h5>关于编程</h5><br>&emsp;昨晚肥文问我，“你热爱你所选择的编程吗？”。我第一反应是，当然热爱啊。可是，她说中了我的痛处。没错，每个人都有热爱。我热爱篮球，热爱社交，热爱编程。可是想想，人有那么多的精力去热爱那么多的东西吗。很明显，我并没有。等到毕业的时候，我需要靠自己去工作，去买房，去建立自己的家庭，父母会不会帮忙我不知道，但是活到现在22岁，我觉得有个道理还是必须明白的，遇到事情首先应该不要太依赖别人，要靠自己。于是毫无疑问，编程这条路我肯定要努力地去走，而且要用心地走，并且要走得好。可是我为什么还给自己选择了那么多的热爱。如果一定要问我后不后悔，我必定斩钉截铁的告诉你，我不后悔。我觉得这是我的选择，这就是我的青春。每个人的选择都是不同的，我要一个缤纷的大学生活而不是单调的大学经历。但是回过头来说，我想，我的热爱被分成多个方向，于是对于编程，可能并没有当初大一刚进来的时候那样专注吧。有项目的时候在追赶时间的过程中匆忙地写完该做的部分，在有空的时候匆忙地看下所要学习的知识，做做笔记。这一切的所有我都想用匆忙两个字来概括。因为现在回头想起来，当初所做都太过去粗糙了。回头看自己的笔记，有时候觉得仿佛没做过这样的笔记。我想把2015上半年所做的归结为：完成任务式地学习。这也是为什么肥文说的话震撼了我的原因。如她所说，热爱的编程的人越编程越爱，越来越着迷。所幸，2015下半年我觉得自己的编程学习并不是特别糟，看了挺多的专业书，暑假没有回家，留在工作室学习和做项目，不用上课的时候懒得每天撸代码到一点还得回宿舍于是时常直接在工作室睡折叠床，我爱那段暑假生活。<p></p>
-<p></p><h5>关于篮球</h5><br>&emsp;也许就是昨晚她问我的那个问题，让我放弃了篮球了吧。想一想，在大一球队招新的时候，我应该是同届中能力最差的一个吧。能够进入到球队对于我来说只能用幸运与被眷顾来概括。进了球队，尽管能力最差不仅训练有点吃力而且也没有机会在正式比赛中上场。但是我一步一步地努力一点一点地学习与进步，尽管能力不是很好，但是态度是最积极的。这也让我最后成为了我们那届的队长之一。回想2015，我在球队的付出是我现在回想起来都佩服我自己的。作为新生代的球队队长，该做的事情很多。我们那届有两个队长，我和邦邦。我负责训练发送短信以及统计情况，他负责其他的，当然这只是表面的工作。作为队长，训练态度很大程度上会影响其他成员，所以我基本没有缺席，甚至经常下午两点就去球场霸场，夏天的时候有时候训练到晚上七点。2:00~7:00-&gt;5个小时，回到宿舍洗澡吃饭还得继续往工作室跑。特别是2015下半年，也许是我在球队这边压力最大的一年，邦邦被医院诊断为肺结核，休学回家。于是我们这一届就剩下我一个队长。纵然那时候已经从师弟中选出了新一届的队长，但是自己还是要监督还有指导他们，我想，那是我在球队过得最煎熬的一段时间。可见，有搭档是件多么好的事情。幸好邦邦已经痊愈归来，不然我一个人真的好慌。好了，回到我要讲的主题:放弃篮球。我想这是一个我说出口眼眶会湿润的字眼。我很不舍，但是现实真的很残酷。我想我没有太多任性的机会了。也许你们会想，作为球队队长，你放弃篮球了，那球队怎么办。很明显，我不会是一个不负责任就撇下一切的人。在我眼中，不放弃篮球意味着经常逼自己训练甚至加训，而放弃篮球意味着只把它当爱好，打打就算了，不去想什么比赛的事情。所以就算我这样决定了，新的一年有训练我会尽量去，尽管我指的我会去找一份实习，可能没有时间去…但是我真的会尽量抽空去看看那群兄弟。<p></p>
-<p></p><h5>计划</h5><br>&emsp;毫无疑问，人要铭记过去，立足当下，走向未来。<p></p>
-<p>&emsp;过去的自己不是没有定下计划，只是经常是计划美好过现实，最终计划只能无奈地宣告失败。对于2016，我想是我极其重要的一年，实习与就业。今天刚刚去面试一家公司，不知道结果怎么样，但是就算挂了，我也会再找，找一份实习充实自己的项目经验，体验一下公司那种团队合作以及模块化管理。</p>
-<p></p><h6>&emsp;计划：</h6><br>    1.继续写博客，保持习惯，尽量每天一篇，忙的话一周不能少于三篇；<br>    2.找到一份实习，白天去实习，晚上有空的话就看书；<br>    3.扎实Android基本知识(根据Android开发艺术探索)；<br>    4.使用和了解第三方库；<br>    5.有机会的话建立一个自己的github项目，并保持更新；<br>    6.与人为善，宽容待人；<br>    7.更多地接触设计模式以及Android设计框架;<br>    8.找到一份好的实习offer+毕业offer<br>    9.To hunt or to be hunted.<p></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/心情日记/">心情日记</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-JAVA双重检查锁定和延迟初始化" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/06/JAVA双重检查锁定和延迟初始化/" class="article-date">
-      <time datetime="2016-01-06T07:28:51.000Z" itemprop="datePublished">2016-01-06</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/06/JAVA双重检查锁定和延迟初始化/">JAVA双重检查锁定和延迟初始化</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p></p><h4>双重检查锁定</h4><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DoubleCheckedLocking</span> </span>&#123;</span><br><span class="line">  	<span class="keyword">private</span> <span class="keyword">static</span> Instance instance ;</span><br><span class="line">  	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Instance <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">if</span> (instance == <span class="keyword">null</span>)</span><br><span class="line">      		<span class="keyword">synchronized</span>(DoubleCheckedLocking) &#123;</span><br><span class="line">        	<span class="keyword">if</span> (instance == <span class="keyword">null</span>)</span><br><span class="line">          		instance = <span class="keyword">new</span> Instance();</span><br><span class="line">      		&#125;</span><br><span class="line">    	<span class="keyword">return</span> instance;</span><br><span class="line">   	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p>
-<p>在Java多线程程序中有时候需要延迟初始化来降低开销，但是如上的方法看似完美，却存在着如下问题：</p>
-<pre><code>在第一个判断instance不为空的时候，instance可能还没有初始化好。因为初始化对象并指向引用分为两个步骤，如果重排序这两个步骤，即还没有完成初始化就分配对象引用，这时候就造成了对象还没有初始化完。
-</code></pre><p>这时候有两个解决方案：</p>
-<pre><code>- 不要使初始化对象和分配对象引用这两个步骤重排序
-- 不要使其他线程看到这两个方法的重排序
-</code></pre><h5>两种解决方法：</h5><br>1.基于volatile的解决方案<br><br>     将instance定义为volatile变量，这样的话初始化对象和分配对象引用这两个步骤就不会被重排序了。（volatile关键字可以防止变量还没初始化就被引用）<br><br>2.基于类初始化的解决方案<br><br>     JVM在类的初始化阶段，会执行类的初始化。在执行类的初始化期间，JVM会去获取一个锁。这个锁可以同步多个线程对同一个类的初始化。（写一个静态类）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InstanceFactory</span></span>&#123;</span><br><span class="line">     <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InstanceHolder</span></span>&#123;</span><br><span class="line">          <span class="keyword">public</span> <span class="keyword">static</span> Instance instance = <span class="keyword">new</span> Instance();</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Instance <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">          <span class="keyword">return</span> InstanceHolder.instance;</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>    每个线程以获取到初始化锁，先判断初始化锁的初始化状态，如果还没初始化过这个类那就进行初始化，那么InstanceHolder将会被初始化；如果正在初始化，那么就退出锁，等待初始化完毕再重新进入。如果初始化过了，那就不用管类的初始化了。<br><br><br><h5>比较两种解决方案：</h5>
-
-<pre><code>-  基于类初始化的方案的实现代码更简洁
--  基于volatile的方案不仅可以对静态字段实现延迟初始化，还可以对实例字段实现延迟初始化。
-</code></pre><p>综上，如果需要对实例字段延迟初始化，应该使用基于volatile的解决方案；如果需要对静态字段延迟初始化，则采用基于类初始化的方案。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-JAVA内存模型" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/04/JAVA内存模型/" class="article-date">
-      <time datetime="2016-01-04T14:10:36.000Z" itemprop="datePublished">2016-01-04</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/04/JAVA内存模型/">JAVA内存模型</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h4>1.JAVA中的数据存储</h4><br>    1. 寄存器：最快的存储区, 由编译器根据需求进行分配,我们在程序中无法控制.<br>    2. 栈：存放基本类型的变量数据和对象的引用，但对象本身不存放在栈中，而是存放在堆（new 出来的对象）或者常量池中(对象可能在常量池里)（字符串常量对象存放在常量池中。）<br>    3. 堆：存放所有new出来的对象。<br>    4. 静态域：存放静态成员（static定义的）<br>    5. 常量池：存放字符串常量和基本类型常量（public static final）。有时，在嵌入式系统中，常量本身会和其他部分分割离开(由于版权等其他原因)，所以在这种情况下，可以选择将其放在ROM中 。<br>    6. 非RAM存储：硬盘等永久存储空间<br><h4>2.关于JAVA内存模型</h4><br>&emsp;Java内存模型（简称JMM）决定一个线程对共享变量的写入何时对另一个线程可见。从抽象的角度来看，JMM定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存，每个线程都一个私有的本地内存，本地内存存储着该线程以读/写共享变量的副本。本地内存是个抽象概念，并不真实存在。<strong>JMM通过控制主内存与每个线程的本地内存之间的交互，来为Java程序猿提供内存可见性保证。</strong><br><h4>3.关于重排序</h4><br>&emsp;执行程序的时候，为了提高性能，编译器和处理器经常对指令进行重排序，重排序有三种：<br><br>    1.编译器优化的重排序<br>    2.指令级并行的重排序<br>    3.内存系统的重排序（由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是乱序执行）<br>源代码-&gt;编译器优化重排序-&gt;指令级并行重排序-&gt;内存系统重排序-&gt;最终执行序列<br><br><h4>4.数据依赖</h4><br>    写后读，写后写，读后写。<br><h4>5.as-if-serial语义</h4><br>    不管怎么重排序，程序的执行结果不能被改变。<br><h4>6.处理器重排序影响程序执行结果的解决方法</h4><br>    对于处理器重排序，JMM的处理器重排序规则会要求Java编译器在生成指令序列时，插入特定类型的内存屏障指令来禁止特定类型的处理器重排序。<br><h4>7.happens-before关系</h4><br>    在JMM中，如果一个操作的结果需要对另一个操作可见，那么这两个操作之间必须要存在happens-before关系。JMM通过happens-before关系向程序猿提供跨线程的内存可见性保证。<br><h4>8.重排序64位的写操作的结果</h4><br>    由于64位的long/double变量的写操作拆分为两个32位的写操作执行，两个32位的写操作可能会被分配到不同的总线事务中执行，此时，对这个64位变量的写操作将不具有原子性。但是jdk5开始，读具有原子性，仅允许拆分写。<br><h4>9.volatile变量的特性</h4>
-
-<pre><code>1.可见性：对一个volatile变量的读，总是能看到任意线程对这个volatile变量最后的写入
-2.原子性
-</code></pre><p></p><h4>10.volatile写-读得内存语义</h4><br>    1.写：当写一个volatile变量时，JMM会把该线程对应的本地内存中的共享变量刷新到主内存；<br>     2.读：当读一个volatile变量时，JMM会把该线程对应的本地内存置为无效，并从主内存中读取共享变量。<p></p>
-<p></p><h4>11.JMM如何实现volatile的内存语义</h4><br>    为了保证能够正确实现volatile的内存语义，JMM可以选择在每个volatile写的后面或者每个volatile读的前面插入一个StoreLoad屏障。但是，为了考虑整体执行效率，JMM选择在每个volatile写的后面插入一个StoreLoad屏障。（首先保证正确性，再去考虑效率）<p></p>
-<p></p><h4>12.对于final域，编译器和处理器要遵守两个重排序规则</h4><br>    1.在构造函数内对一个final域的写入，与随后把这个被构造对象的引用赋值给一个引用变量，这两个操作之间不能重排序；（写final域的操作不会重排序到构造器之外，但是在多线程环境下，普通的写操作会）<br>    2.初次读一个包含final域的对象的引用，与随后初次读这个域，这两个操作之间不能重排序。（ 初次读对象引用和初次读该对象包含的final域，这两个操作存在间接依赖的关系。即，在读一个对象final域之前，一定会先读包含这个final域的对象的引用。）<p></p>
-<p></p><h4>13.具有volatile变量的类在被new的时候</h4><br>    在构造函数返回前，被构造对象的引用不能为其他线程所见。（需要另一个保证：在构造函数内部，不能让这个被构造对象的引用为其他线程所见。如obj=this;这样的操作会使this引用溢出）<p></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-JAVA并发机制的底层实现原理" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/03/JAVA并发机制的底层实现原理/" class="article-date">
-      <time datetime="2016-01-03T14:54:21.000Z" itemprop="datePublished">2016-01-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/03/JAVA并发机制的底层实现原理/">JAVA并发机制的底层实现原理</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p></p><h2>&emsp;关键字volatile</h2><p></p>
-<h4>1.volatile的定义</h4><br>    JAVA编程语言允许线程访问共享变量，为了确保共享变量能够被准备和一致地更新，线程应该确保通过排它锁单独获得这个变量。<br><br><h4>2.对有volatile变量修饰的共享变量进行写操作会汇编指令多出一行代码：Lock前缀指令。Lock前缀的指令在多核处理器下会引发以下两件事情</h4><br>    1.将当前处理器缓存行的数据回写到系统内存。<br>    2.这个写回内存操作会使得其他CPU里缓存了该内存地址的数据无效。<br><br><br><h4>3.如果对volatile变量进行写操作，JVM就会向处理器发送一条Lock前缀的命令，将这个变量所在缓存行的数据写回到系统内存中。</h4>
-
-<p></p><h4>4.volatile的使用优化</h4><br>        追加字节优化性能：将共享变量追加到64字节。<br>         理由：如果队列的头节点和尾节点都不足64个字节，处理器会将它们读到同一个高速缓存行里面。在多处理器的情况下每个处理器都会缓存同样的头尾节点，当一个处理器师徒修改头节点时，将锁定整个缓存行，在缓存一致性机制的作用下，导致其他处理器不能访问自己告诉缓存中的尾节点，严重影响到队列的出队和入队的效率。<br>         注意：在以下情况下不应该将volatile变量追加到64字节<p></p>
-<pre><code>-  缓存行非64字节宽的处理器
--  共享变量不会被频繁写地（因为本身追加字节这种方式会带来一定的性能消耗）
-</code></pre><p></p><h2>&emsp;关键字synchronized</h2><p></p>
-<p></p><h4>1.Java的每一个对象都可以作为锁</h4><p></p>
-<pre><code>1. 对于普通同步方法，锁是当前实例对象；
-2. 对于静态同步方法，锁是当前类的Class对象；
-3. 对于同步方法快，锁是Synchronized括号里面配置的对象。
-</code></pre><p></p><h4>2.JAVA用的锁存在Java对象头里。</h4><br>    如果对象是数组类型，那么虚拟机就用3个字宽（Word）存储对象头；如果对象是非数组类型，则用2字宽存储对象头。因为如果是一个数组的话需要多一个字宽来表示数组的长度。<p></p>
-<p></p><h4>3.锁一共有四种状态，从低到高依次是：无锁状态，偏向锁状态，轻量级锁状态和重量级锁状态。锁可以升级但是不可以降级，这样的目的是为了提高获得和释放锁的效率。</h4><br>    1.偏向锁：会偏向第一个访问锁的线程，如果在接下来的过程中，该锁不会被其他线程访问，则持有该偏向锁的线程永远不需要触发同步。如果遇到其他线程抢占，那么持有偏向锁的线程将被挂起，JVM尝试消除它身上的偏向锁，将锁恢复到标准的轻量级锁。（偏向锁只在单线程下起作用。）（如果确定应用的所有的锁通常情况下处于竞争状态，可以通过JVM参数关闭偏向锁。）<br>    2.轻量级锁：为了优化Java的Lock机制才引进的，本意是为了减少多线程进入互斥的几率而不是替代互斥。<p></p>
-<pre><code>- 轻量级锁加锁：线程在执行同步块之前，JVM会先在当前线程的栈桢中，创建用于存储锁记录的空间，将对象头中得Mark Word复制到锁记录中，然后线程尝试使用CAS将对象头中的Mark Word替换为指向锁记录的指针。如果成功，当前线程获得锁。如果失败，表示其他线程竞争锁，当前线程便尝试使用自旋来获得锁。
- - 轻量级锁解锁：使用原子的CAS操作将Displaced Mark Word替换回到对象头，如果成功，则表示没有竞争发生，如果失败，表示当前锁存在竞争，锁就会膨胀成重量级锁。因为自旋会消耗CPU，为避免无用的自旋，一但升级成为重量级锁，就不会再恢复到轻量级锁状态。
-</code></pre><p><strong>关于锁的优缺点</strong></p>
-<p><img src="http://7xpvqt.com1.z0.glb.clouddn.com/JAVA%E5%B9%B6%E5%8F%91%E6%9C%BA%E5%88%B6%E7%9A%84%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86JAVA%E9%94%81%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9%E6%AF%94%E8%BE%83.jpg" alt=""></p>
-<p></p><h4>4.处理器如何实现原子操作</h4><br>    1.通过总线锁保证原子性：当处理器输出一个Lock#信号，其他处理器的请求被阻塞，那么该处理器将可以独占共享内存。<br>    2.通过缓存锁定保证原子性：内存区域如果被缓存在处理器的缓存行里，并且在Lock操作期间被锁定，那么当它执行锁操作回写到内存时，处理器不在总线上发LOCK#信号，而是修改内部的地址，并允许它的缓存一次性机制保证操作的原子性，当其他处理器回写已被锁定的缓存行的数据时，会使缓存行无效。<br>两种情况下处理器不会使用缓存锁定：<p></p>
-<pre><code>- 当操作的数据不能被缓存在处理器内部，或操作的数据跨多个缓存行时，处理器会调用总线锁定；
-- 有些处理器不支持缓存锁定。
-</code></pre><p></p><h4>5.CAS实现原子操作的三个问题：</h4><p></p>
-<pre><code>- ABA问题（数值没变，但是版本变了）；
-- 循环时间长开销大(pause指令)；
-- 只能保证一个共享变量的原子操作（对多个共享变量操作，我们可以把多个共享变量合并成一个共享变量来操作）。
-</code></pre>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-JAVA并发编程的挑战" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/03/JAVA并发编程的挑战/" class="article-date">
-      <time datetime="2016-01-03T13:37:47.000Z" itemprop="datePublished">2016-01-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h4>1.多线程一定快吗？</h4><br>不一定。因为多线程有上下文切换和创建进程的开销。<br><br>于是我们其实可以这样来减少上下文的切换：<br><br>    1.无锁并发编程（避免使用锁，比如数据分段处理）<br>    2.CAS算法（如JAVA的Atomic包）<br>    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）<br>    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）<br><br><h4>2.多线程如何避免死锁</h4>
-
-<pre><code>1.避免一个线程同时获取多个锁
-2.尽量每个锁只占有一个或者尽量少的资源
-3.使用定时锁来代替内部锁机制
-4.数据库锁的加锁和解锁必须在同一个数据库连接中
-</code></pre><p></p><h4>3.资源限制</h4><br>&emsp;我们在讨论效率和速度的时候经常忽略一个点，那就是我们所研究的东西都是建立在计算机硬件资源和软件资源条件允许的情况上，但是，其实，<strong>程序的执行速度受限制于计算机的硬件和软件资源</strong>。比如有时候我们下载一个资源，可能服务器限定最高每个访问最高下载速度是1MB每秒，这时候假设我们会开启10条线程进行下载，但是如果服务器或者用户机器的带宽只有2MB每秒，速度就不可能达到10MB每秒。当然除此之外还有硬盘读写速度，CPU处理度等。<p></p>
-<p></p><h4>4.资源限制引发的问题</h4><br>&emsp;如果受限于资源，那么出于效率考虑将串行的代码改为并发执行，仍然在串行执行，这时候<strong>程序不但不会加速执行，反而会更慢，因为增加了上下文切换和资源调度的时间。</strong><p></p>
-<p></p><h4>5.解决资源限制的问题</h4><br>    -硬件资源限制可以考虑强化单机的资源或者让程序在多机上执行。<br>    -软件资源限制可以考虑使用资源池将资源复用。比如复用数据库和Socket连接等。<p></p>
-<p><br><br>–源自《JAVA并发编程的艺术》第一章“JAVA并发编程的挑战”读书笔记</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/01/hello-world/" class="article-date">
-      <time datetime="2016-01-01T05:13:41.000Z" itemprop="datePublished">2016-01-01</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/01/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start"><a href="#Quick_Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create_a_new_post"><a href="#Create_a_new_post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server"><a href="#Run_server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files"><a href="#Generate_static_files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites"><a href="#Deploy_to_remote_sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-  
 </div>
       <footer id="footer">
     <div class="outer">
@@ -1044,20 +472,6 @@
 </footer>
     </div>
     
-    <script>
-        var yiliaConfig = {
-            fancybox: false,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-        }
-    </script>
-
 
 <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="/js/main.js" type="text/javascript"></script>
