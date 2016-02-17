@@ -3,24 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>立足2016 | Darren Yan’s Blog</title>
+  <title>Android的消息机制 | Darren Yan’s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="&amp;emsp;立足2016，之所以以此为题，是因为最近刚过了元旦，回头看是急忙走过的2015，向前看是正在经历的2016。
-&amp;emsp;现在大概是自己学习Android编程一年半的时间点，其实我很想问问自己到底在这一年半里为自己的选择付出了什么。
-关于社团&amp;emsp;2015上半年也就是大二下学期，我有社团，有篮球队，有工作室。我想这是我最忙碌的半年吧，本来打算退了社团，因为部门部长一共有6个，就算">
+  <meta name="description" content="&amp;emsp;&amp;emsp;Android的消息机制主要是指Handler的运行机制，Handler的运行需要底层的MessageQueue和Looper的支撑.MessageQueue虽然中文翻译为消息队列，但其实它的内部实现是链表，只不过是以队列的形式对外提供插入和删除的工作。通过查阅源码可以知道，next方法是一个无线循环的方法，如果消息队列没有消息，那么next则被阻塞住，当新消息到来的时候，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="立足2016">
-<meta property="og:url" content="http://yoursite.com/2016/01/07/立足2016/index.html">
+<meta property="og:title" content="Android的消息机制">
+<meta property="og:url" content="http://yoursite.com/2016/02/17/Android的消息机制/index.html">
 <meta property="og:site_name" content="Darren Yan’s Blog">
-<meta property="og:description" content="&amp;emsp;立足2016，之所以以此为题，是因为最近刚过了元旦，回头看是急忙走过的2015，向前看是正在经历的2016。
-&amp;emsp;现在大概是自己学习Android编程一年半的时间点，其实我很想问问自己到底在这一年半里为自己的选择付出了什么。
-关于社团&amp;emsp;2015上半年也就是大二下学期，我有社团，有篮球队，有工作室。我想这是我最忙碌的半年吧，本来打算退了社团，因为部门部长一共有6个，就算">
-<meta property="og:updated_time" content="2016-01-07T09:05:31.000Z">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;Android的消息机制主要是指Handler的运行机制，Handler的运行需要底层的MessageQueue和Looper的支撑.MessageQueue虽然中文翻译为消息队列，但其实它的内部实现是链表，只不过是以队列的形式对外提供插入和删除的工作。通过查阅源码可以知道，next方法是一个无线循环的方法，如果消息队列没有消息，那么next则被阻塞住，当新消息到来的时候，">
+<meta property="og:updated_time" content="2016-02-17T13:56:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="立足2016">
-<meta name="twitter:description" content="&amp;emsp;立足2016，之所以以此为题，是因为最近刚过了元旦，回头看是急忙走过的2015，向前看是正在经历的2016。
-&amp;emsp;现在大概是自己学习Android编程一年半的时间点，其实我很想问问自己到底在这一年半里为自己的选择付出了什么。
-关于社团&amp;emsp;2015上半年也就是大二下学期，我有社团，有篮球队，有工作室。我想这是我最忙碌的半年吧，本来打算退了社团，因为部门部长一共有6个，就算">
+<meta name="twitter:title" content="Android的消息机制">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;Android的消息机制主要是指Handler的运行机制，Handler的运行需要底层的MessageQueue和Looper的支撑.MessageQueue虽然中文翻译为消息队列，但其实它的内部实现是链表，只不过是以队列的形式对外提供插入和删除的工作。通过查阅源码可以知道，next方法是一个无线循环的方法，如果消息队列没有消息，那么next则被阻塞住，当新消息到来的时候，">
   
   
     <link rel="icon" href="/favicon.png">
@@ -190,11 +184,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-立足2016" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Android的消息机制" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/01/07/立足2016/" class="article-date">
-      <time datetime="2016-01-07T06:59:34.000Z" itemprop="datePublished">2016-01-07</time>
+      <a href="/2016/02/17/Android的消息机制/" class="article-date">
+      <time datetime="2016-02-17T13:46:33.000Z" itemprop="datePublished">2016-02-17</time>
 </a>
     </div>
   
@@ -207,7 +201,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      立足2016
+      Android的消息机制
     </h1>
   
 
@@ -218,7 +212,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/心情日记/">心情日记</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -228,14 +222,19 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>&emsp;立足2016，之所以以此为题，是因为最近刚过了元旦，回头看是急忙走过的2015，向前看是正在经历的2016。</p>
-<p>&emsp;现在大概是自己学习Android编程一年半的时间点，其实我很想问问自己到底在这一年半里为自己的选择付出了什么。</p>
-<p></p><h5>关于社团</h5><br>&emsp;2015上半年也就是大二下学期，我有社团，有篮球队，有工作室。我想这是我最忙碌的半年吧，本来打算退了社团，因为部门部长一共有6个，就算我走了他们也可以hold住。但是小伙伴们都挽留我，任性地叫我忙的话就不用来社团这边了，有空过来就行了。感情还是在的，于是我留下来了。可是以我的性格，怎么可能留在那里却没有干事情，那不是一个负责任的我。<p></p>
-<p></p><h5>关于编程</h5><br>&emsp;昨晚肥文问我，“你热爱你所选择的编程吗？”。我第一反应是，当然热爱啊。可是，她说中了我的痛处。没错，每个人都有热爱。我热爱篮球，热爱社交，热爱编程。可是想想，人有那么多的精力去热爱那么多的东西吗。很明显，我并没有。等到毕业的时候，我需要靠自己去工作，去买房，去建立自己的家庭，父母会不会帮忙我不知道，但是活到现在22岁，我觉得有个道理还是必须明白的，遇到事情首先应该不要太依赖别人，要靠自己。于是毫无疑问，编程这条路我肯定要努力地去走，而且要用心地走，并且要走得好。可是我为什么还给自己选择了那么多的热爱。如果一定要问我后不后悔，我必定斩钉截铁的告诉你，我不后悔。我觉得这是我的选择，这就是我的青春。每个人的选择都是不同的，我要一个缤纷的大学生活而不是单调的大学经历。但是回过头来说，我想，我的热爱被分成多个方向，于是对于编程，可能并没有当初大一刚进来的时候那样专注吧。有项目的时候在追赶时间的过程中匆忙地写完该做的部分，在有空的时候匆忙地看下所要学习的知识，做做笔记。这一切的所有我都想用匆忙两个字来概括。因为现在回头想起来，当初所做都太过去粗糙了。回头看自己的笔记，有时候觉得仿佛没做过这样的笔记。我想把2015上半年所做的归结为：完成任务式地学习。这也是为什么肥文说的话震撼了我的原因。如她所说，热爱的编程的人越编程越爱，越来越着迷。所幸，2015下半年我觉得自己的编程学习并不是特别糟，看了挺多的专业书，暑假没有回家，留在工作室学习和做项目，不用上课的时候懒得每天撸代码到一点还得回宿舍于是时常直接在工作室睡折叠床，我爱那段暑假生活。<p></p>
-<p></p><h5>关于篮球</h5><br>&emsp;也许就是昨晚她问我的那个问题，让我放弃了篮球了吧。想一想，在大一球队招新的时候，我应该是同届中能力最差的一个吧。能够进入到球队对于我来说只能用幸运与被眷顾来概括。进了球队，尽管能力最差不仅训练有点吃力而且也没有机会在正式比赛中上场。但是我一步一步地努力一点一点地学习与进步，尽管能力不是很好，但是态度是最积极的。这也让我最后成为了我们那届的队长之一。回想2015，我在球队的付出是我现在回想起来都佩服我自己的。作为新生代的球队队长，该做的事情很多。我们那届有两个队长，我和邦邦。我负责训练发送短信以及统计情况，他负责其他的，当然这只是表面的工作。作为队长，训练态度很大程度上会影响其他成员，所以我基本没有缺席，甚至经常下午两点就去球场霸场，夏天的时候有时候训练到晚上七点。2:00~7:00-&gt;5个小时，回到宿舍洗澡吃饭还得继续往工作室跑。特别是2015下半年，也许是我在球队这边压力最大的一年，邦邦被医院诊断为肺结核，休学回家。于是我们这一届就剩下我一个队长。纵然那时候已经从师弟中选出了新一届的队长，但是自己还是要监督还有指导他们，我想，那是我在球队过得最煎熬的一段时间。可见，有搭档是件多么好的事情。幸好邦邦已经痊愈归来，不然我一个人真的好慌。好了，回到我要讲的主题:放弃篮球。我想这是一个我说出口眼眶会湿润的字眼。我很不舍，但是现实真的很残酷。我想我没有太多任性的机会了。也许你们会想，作为球队队长，你放弃篮球了，那球队怎么办。很明显，我不会是一个不负责任就撇下一切的人。在我眼中，不放弃篮球意味着经常逼自己训练甚至加训，而放弃篮球意味着只把它当爱好，打打就算了，不去想什么比赛的事情。所以就算我这样决定了，新的一年有训练我会尽量去，尽管我指的我会去找一份实习，可能没有时间去…但是我真的会尽量抽空去看看那群兄弟。<p></p>
-<p></p><h5>计划</h5><br>&emsp;毫无疑问，人要铭记过去，立足当下，走向未来。<p></p>
-<p>&emsp;过去的自己不是没有定下计划，只是经常是计划美好过现实，最终计划只能无奈地宣告失败。对于2016，我想是我极其重要的一年，实习与就业。今天刚刚去面试一家公司，不知道结果怎么样，但是就算挂了，我也会再找，找一份实习充实自己的项目经验，体验一下公司那种团队合作以及模块化管理。</p>
-<p></p><h6>&emsp;计划：</h6><br>    1.继续写博客，保持习惯，尽量每天一篇，忙的话一周不能少于三篇；<br>    2.找到一份实习，白天去实习，晚上有空的话就看书；<br>    3.扎实Android基本知识(根据Android开发艺术探索)；<br>    4.使用和了解第三方库；<br>    5.有机会的话建立一个自己的github项目，并保持更新；<br>    6.与人为善，宽容待人；<br>    7.更多地接触设计模式以及Android设计框架;<br>    8.找到一份好的实习offer+毕业offer<br>    9.To hunt or to be hunted.<p></p>
+        <p>&emsp;&emsp;<strong>Android的消息机制主要是指Handler的运行机制，Handler的运行需要底层的MessageQueue和Looper的支撑.<br>MessageQueue虽然中文翻译为消息队列，但其实它的内部实现是链表，只不过是以队列的形式对外提供插入和删除的工作。通过查阅源码可以知道，next方法是一个无线循环的方法，如果消息队列没有消息，那么next则被阻塞住，当新消息到来的时候，next方法会返回这条消息并且从单链表中移除。</strong></p>
+<p></p><h4>MessageQueue</h4><br>&emsp;&emsp;虽然中文翻译为消息队列，但其实它的内部实现是链表，只不过是以队列的形式对外提供插入和删除的工作。通过查阅源码可以知道，next方法是一个无线循环的方法，也就是如果消息队列没有消息，那么next则被阻塞住，当新消息到来的时候，next方法会返回这条消息并且从单链表中移除。<p></p>
+<p></p><h4>Looper</h4><br>&emsp;&emsp;中文翻译为循环，可以理解为消息循环，MessageQueue只是一个消息的存储，不能处理消息，而Looper会以无限循环的形式去查找是否有新消息，如果有的话就处理，没有的话就一直等待。Looper有两个退出的方法quit和quitSafely，quit会直接退出Looper，quitSafely只是设定一个退出标记，然后处理完消息队列中的已有消息才安全地退出。当消息队列被标记为退出状态之后，next方法就会返回true。Looper退出之后，Handler发送的消息会失败，此时Handler的send返回false。手动创建的Looper，在完成了所有事务之后应该调用quit终止消息循环，否则子线程就会处于等待的状态。<p></p>
+<p></p><h4>ThreadLocal</h4><br>&emsp;&emsp;顾名思义是一个线程内部的数据存储类，通过它，可以在指定的线程中存储数据，存储之后，只有在指定线程中可以获取到存储的数据，而其他线程无法获取到数据。当某些数据以线程为作用于并且不同线程具有不同的数据副本的时候，就可以考虑使用ThreadLocal.<p></p>
+<p>&emsp;&emsp;<strong>实现原理</strong>：因为不同线程访问同一个ThreadLocal的get方法，ThreadLocal内部会从各自线程中取出一个数组（Thread类的内部有一个成员专门用于存储线程的ThreadLocal数据：ThreadLocal.Values localValues），然后再根据索引去查找对应的value值。通过ThreadLocal也可以轻松获取每个线程的Looper。</p>
+<p><strong>线程默认是没有Looper的，如果需要使用Handler，就必须为线程创建Looper。而主线程在创建时就会初始化Looper，这也是主线程中默认可以使用Handler的原因。</strong></p>
+<p><strong>Handler的主要作用是将一个任务切换到某个指定线程中执行。而经常我们遇到的一个情况是不能在子线程中访问UI，从而需要将任务切换到主线程中去执行。</strong></p>
+<p></p><h5>为什么不能在子线程，而只能在主线程中访问UI呢？</h5><br>&emsp;&emsp;因为Android的UI控件不是线程安全的，如果多线程并发访问可能会导致UI空间处于不可预期的状态。为什么不加上锁？<p></p>
+<p>原因如下：</p>
+<pre><code>1.加锁会让UI访问的逻辑变得复杂；
+2.锁机制会降低UI访问的效率。
+</code></pre><p>所以综上原因，最简单和高效的方法就是采用单线程模型来处理UI操作。</p>
+<p></p><h5>为什么Handler机制能够切换任务在不同线程中运行？</h5><br>&emsp;&emsp;我的理解：比如现在我们要通过子线程获取消息在主线程中更新UI。这时候我们需要在主线程中定义一个Handler，主线程默认已经初始化Looper，所以我们需要做的是开启子线程联网下载，完成之后在子线程中调用Handler的post将一个Runnable投递到Handler内部的Looper中去，或者send方法发送消息。post方法最终也是通过send方法完成的，send方法被调用时，它会调用MessageQueue的enqueueMessage方法将这个消息放入消息队列中。当主线程的Looper发现有新消息到来的时候，就会处理消息。此时Looper是运行在Handler所在的线程也就是主线程，这时候就成功切换线程了。（Handler发送消息只是向消息队列插入消息，需要等待Looper获取插入的消息并进行处理。）<p></p>
 
       
     </div>
@@ -244,13 +243,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/01/07/立足2016/">立足2016</a></p>
+        <p><span>本文标题:</span><a href="/2016/02/17/Android的消息机制/">Android的消息机制</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Darren Yan 的个人博客">Darren Yan</a></p>
-        <p><span>发布时间:</span>2016年01月07日 - 14时59分</p>
-        <p><span>最后更新:</span>2016年01月07日 - 17时05分</p>
+        <p><span>发布时间:</span>2016年02月17日 - 21时46分</p>
+        <p><span>最后更新:</span>2016年02月17日 - 21时56分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/01/07/立足2016/" title="立足2016">http://yoursite.com/2016/01/07/立足2016/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/01/07/立足2016/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/02/17/Android的消息机制/" title="Android的消息机制">http://yoursite.com/2016/02/17/Android的消息机制/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/02/17/Android的消息机制/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -263,16 +262,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/01/07/JAVA中的线程池/">
-                    JAVA中的线程池
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/01/06/JAVA双重检查锁定和延迟初始化/">
-                    JAVA双重检查锁定和延迟初始化
+                <a href="/2016/01/20/ArrayList实现原理/">
+                    ArrayList实现原理
                 </a>
             </div>
         
@@ -283,7 +276,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">关于社团</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">关于编程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">关于篮球</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">计划</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#undefined"><span class="toc-number">4.1.</span> <span class="toc-text"> 计划：</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">MessageQueue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">Looper</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">ThreadLocal</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">3.1.</span> <span class="toc-text">为什么不能在子线程，而只能在主线程中访问UI呢？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#undefined"><span class="toc-number">3.2.</span> <span class="toc-text">为什么Handler机制能够切换任务在不同线程中运行？</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -345,7 +338,7 @@
 
     <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/01/07/立足2016/" data-title="立足2016" data-url="http://yoursite.com/2016/01/07/立足2016/"></div>
+    <div class="ds-thread" data-thread-key="2016/02/17/Android的消息机制/" data-title="Android的消息机制" data-url="http://yoursite.com/2016/02/17/Android的消息机制/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -372,15 +365,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/01/07/JAVA中的线程池/" title="上一篇: JAVA中的线程池">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/01/06/JAVA双重检查锁定和延迟初始化/" title="下一篇: JAVA双重检查锁定和延迟初始化">
+            <a href="/2016/01/20/ArrayList实现原理/" title="下一篇: ArrayList实现原理">
                 <i class="fa fa-angle-right"></i>
             </a>
         

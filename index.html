@@ -116,7 +116,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA容器/" style="font-size: 13.33px;">JAVA容器</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 16.67px;">JAVA并发编程的艺术</a> <a href="/tags/JAVA源码分析/" style="font-size: 13.33px;">JAVA源码分析</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
+                        <a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA容器/" style="font-size: 13.33px;">JAVA容器</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 16.67px;">JAVA并发编程的艺术</a> <a href="/tags/JAVA源码分析/" style="font-size: 13.33px;">JAVA源码分析</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
                     </div>
                 </section>
                 
@@ -187,6 +187,96 @@
     </div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Android的消息机制" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/17/Android的消息机制/" class="article-date">
+      <time datetime="2016-02-17T13:46:33.000Z" itemprop="datePublished">2016-02-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/17/Android的消息机制/">Android的消息机制</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>&emsp;&emsp;<strong>Android的消息机制主要是指Handler的运行机制，Handler的运行需要底层的MessageQueue和Looper的支撑.<br>MessageQueue虽然中文翻译为消息队列，但其实它的内部实现是链表，只不过是以队列的形式对外提供插入和删除的工作。通过查阅源码可以知道，next方法是一个无线循环的方法，如果消息队列没有消息，那么next则被阻塞住，当新消息到来的时候，next方法会返回这条消息并且从单链表中移除。</strong></p>
+<p></p><h4>MessageQueue</h4><br>&emsp;&emsp;虽然中文翻译为消息队列，但其实它的内部实现是链表，只不过是以队列的形式对外提供插入和删除的工作。通过查阅源码可以知道，next方法是一个无线循环的方法，也就是如果消息队列没有消息，那么next则被阻塞住，当新消息到来的时候，next方法会返回这条消息并且从单链表中移除。<p></p>
+<p></p><h4>Looper</h4><br>&emsp;&emsp;中文翻译为循环，可以理解为消息循环，MessageQueue只是一个消息的存储，不能处理消息，而Looper会以无限循环的形式去查找是否有新消息，如果有的话就处理，没有的话就一直等待。Looper有两个退出的方法quit和quitSafely，quit会直接退出Looper，quitSafely只是设定一个退出标记，然后处理完消息队列中的已有消息才安全地退出。当消息队列被标记为退出状态之后，next方法就会返回true。Looper退出之后，Handler发送的消息会失败，此时Handler的send返回false。手动创建的Looper，在完成了所有事务之后应该调用quit终止消息循环，否则子线程就会处于等待的状态。<p></p>
+<p></p><h4>ThreadLocal</h4><br>&emsp;&emsp;顾名思义是一个线程内部的数据存储类，通过它，可以在指定的线程中存储数据，存储之后，只有在指定线程中可以获取到存储的数据，而其他线程无法获取到数据。当某些数据以线程为作用于并且不同线程具有不同的数据副本的时候，就可以考虑使用ThreadLocal.<p></p>
+<p>&emsp;&emsp;<strong>实现原理</strong>：因为不同线程访问同一个ThreadLocal的get方法，ThreadLocal内部会从各自线程中取出一个数组（Thread类的内部有一个成员专门用于存储线程的ThreadLocal数据：ThreadLocal.Values localValues），然后再根据索引去查找对应的value值。通过ThreadLocal也可以轻松获取每个线程的Looper。</p>
+<p><strong>线程默认是没有Looper的，如果需要使用Handler，就必须为线程创建Looper。而主线程在创建时就会初始化Looper，这也是主线程中默认可以使用Handler的原因。</strong></p>
+<p><strong>Handler的主要作用是将一个任务切换到某个指定线程中执行。而经常我们遇到的一个情况是不能在子线程中访问UI，从而需要将任务切换到主线程中去执行。</strong></p>
+<p></p><h5>为什么不能在子线程，而只能在主线程中访问UI呢？</h5><br>&emsp;&emsp;因为Android的UI控件不是线程安全的，如果多线程并发访问可能会导致UI空间处于不可预期的状态。为什么不加上锁？<p></p>
+<p>原因如下：</p>
+<pre><code>1.加锁会让UI访问的逻辑变得复杂；
+2.锁机制会降低UI访问的效率。
+</code></pre><p>所以综上原因，最简单和高效的方法就是采用单线程模型来处理UI操作。</p>
+<p></p><h5>为什么Handler机制能够切换任务在不同线程中运行？</h5><br>&emsp;&emsp;我的理解：比如现在我们要通过子线程获取消息在主线程中更新UI。这时候我们需要在主线程中定义一个Handler，主线程默认已经初始化Looper，所以我们需要做的是开启子线程联网下载，完成之后在子线程中调用Handler的post将一个Runnable投递到Handler内部的Looper中去，或者send方法发送消息。post方法最终也是通过send方法完成的，send方法被调用时，它会调用MessageQueue的enqueueMessage方法将这个消息放入消息队列中。当主线程的Looper发现有新消息到来的时候，就会处理消息。此时Looper是运行在Handler所在的线程也就是主线程，这时候就成功切换线程了。（Handler发送消息只是向消息队列插入消息，需要等待Looper获取插入的消息并进行处理。）<p></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: true,
+            isPost: false,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+
   
     <article id="post-ArrayList实现原理" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -1026,88 +1116,10 @@
         
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   
-    <div class="article-meta">
-      <a href="/2016/01/01/hello-world/" class="article-date">
-      <time datetime="2016-01-01T05:13:41.000Z" itemprop="datePublished">2016-01-01</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/01/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start"><a href="#Quick_Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create_a_new_post"><a href="#Create_a_new_post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server"><a href="#Run_server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files"><a href="#Generate_static_files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites"><a href="#Deploy_to_remote_sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 </div>
       <footer id="footer">
