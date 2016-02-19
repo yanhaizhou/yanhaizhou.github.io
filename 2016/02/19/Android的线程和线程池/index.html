@@ -17,7 +17,7 @@ AsyncTask提供四个核心方法：
 AsyncTask提供四个核心方法：
 (1)onPreExecute,在主线程中执行，在执行异步任务之前，此方法会被调用，一般可以在该方法内部做一些准备工作。
 (2)doInBackground,在线程池中执行，用于执行异步任务。此方法需要返回计算结果给onPostExec">
-<meta property="og:updated_time" content="2016-02-19T07:48:27.000Z">
+<meta property="og:updated_time" content="2016-02-19T07:59:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android的线程和线程池">
 <meta name="twitter:description" content="AsyncTask&amp;emsp;&amp;emsp;AsyncTask封装了线程池和Handler，为了方便开发者在子线程中更新UI。
@@ -245,7 +245,7 @@ AsyncTask提供四个核心方法：
 <p>&emsp;&emsp;Android3.0以下的版本的AsyncTask是并行执行的，3.0及以上是串行执行的，在使AsyncTask在3.0及以上的版本并行，可以采用AsyncTask的executeOnExecutor方法。（此方法是3.0新添加的方法）</p>
 <p></p><h5>HandlerThread</h5><br>&emsp;&emsp;<strong>HandlerThread</strong>是一种具有消息循环的线程，继承了Thread，是一种可以使用Handler的线程，实现方法是在run方法中通过Looper.prepare()来创建消息队列，并且通过Looper.loop()来开启消息循环。<p></p>
 <p>使用方法如下</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HandlerThread handlerThread = <span class="keyword">new</span> HandlerThread(“Darren”);</span><br><span class="line">handlerThread.start();</span><br><span class="line">Handler superHandler = <span class="keyword">new</span> Handler(handlerThread.getLooper())&#123;</span><br><span class="line">.....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">HandlerThread handlerThread = <span class="keyword">new</span> HandlerThread(“Darren”);</span><br><span class="line">handlerThread.start();</span><br><span class="line">Handler superHandler = <span class="keyword">new</span> Handler(handlerThread.getLooper())&#123;</span><br><span class="line">.....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>通过以上的方式，在主线程中的superHandler在收到消息后会在HandlerThread的线程执行代码。</p>
 <p></p><h5>IntentService</h5><br><strong>IntentService</strong>是继承自Service的一个抽象类，可用于执行后台耗时的任务，在任务执行后自动停止，由于是服务的原因，比单纯的线程优先级要高很多。<p></p>
 <p>通过分析源码我们可以知道，在IntentService的onCreate方法中，onCreate方法会创建一个HandlerThread，并且使用HandlerThread的Looper创建Handler，所以通过Handler发送的消息都会在HandlerThread中执行，所以IntentService可以用于执行后台任务，每次启动IntentService，它的onStartCommand方法就会被调用一次，并且在onStartCommand方法中调用onStart方法，然后在onStart方法中通过Handler发送消息，将Intent和startId传输过去。Handler在收到消息之后，将Intent对象传递到onHandlerIntent方法中去处理（onHandlerIntent方式是抽象的，需要用户自己去实现），当onHandlerIntent方法执行结束之后会通过stopSelf(int startId)尝试停止服务，这里不用stopSelf()是因为可能还有其他消息未处理，通过判断最近启动服务的次数是否和startId相等，相等才立即停止服务。因为在IntentService中，Handler也是通过Looper处理消息，我们知道，Looper处理消息是按顺序的。</p>
@@ -254,7 +254,8 @@ AsyncTask提供四个核心方法：
 - 优先控制并发数量，减少阻塞；
 - 实现管理线程的诸多功能。
 </code></pre><p><strong>ThreadPoolExecutor</strong>是线程池的真正实现<br>下面是ThreadPoolExecutor比较常用的一个构造方法</p>
-<pre><code class="JAVA"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(
+<pre><code class="JAVA">
+<span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(
      <span class="keyword">int</span> corePoolSize,//线程池的核心线程数， 数量为CPU核心数+<span class="number">1</span>
      <span class="keyword">int</span> maximumPoolSize,//线程池所能容纳的最大线程数，数量为CPU核心数*<span class="number">2</span>+<span class="number">1</span>
      <span class="keyword">long</span> keepAliveTime,//非核心线程闲置时的超时时间，超过这个时长，将被回收，为<span class="number">1</span>秒
@@ -280,7 +281,7 @@ AsyncTask提供四个核心方法：
         <p><span>本文标题:</span><a href="/2016/02/19/Android的线程和线程池/">Android的线程和线程池</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Darren Yan 的个人博客">Darren Yan</a></p>
         <p><span>发布时间:</span>2016年02月19日 - 14时07分</p>
-        <p><span>最后更新:</span>2016年02月19日 - 15时48分</p>
+        <p><span>最后更新:</span>2016年02月19日 - 15时59分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2016/02/19/Android的线程和线程池/" title="Android的线程和线程池">http://yoursite.com/2016/02/19/Android的线程和线程池/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2016/02/19/Android的线程和线程池/　　作者: Darren Yan" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
