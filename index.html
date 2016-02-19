@@ -116,7 +116,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA容器/" style="font-size: 13.33px;">JAVA容器</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 16.67px;">JAVA并发编程的艺术</a> <a href="/tags/JAVA源码分析/" style="font-size: 13.33px;">JAVA源码分析</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
+                        <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA容器/" style="font-size: 12.5px;">JAVA容器</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 17.5px;">JAVA并发编程的艺术</a> <a href="/tags/JAVA源码分析/" style="font-size: 12.5px;">JAVA源码分析</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
                     </div>
                 </section>
                 
@@ -187,6 +187,105 @@
     </div>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-Android的线程和线程池" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/19/Android的线程和线程池/" class="article-date">
+      <time datetime="2016-02-19T06:07:26.000Z" itemprop="datePublished">2016-02-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/19/Android的线程和线程池/">Android的线程和线程池</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h5>AsyncTask</h5><br>&emsp;&emsp;<strong>AsyncTask</strong>封装了线程池和Handler，为了方便开发者在子线程中更新UI。<br><br>AsyncTask提供四个核心方法：<br><br>      (1)onPreExecute,在主线程中执行，在执行异步任务之前，此方法会被调用，一般可以在该方法内部做一些准备工作。<br>      (2)doInBackground,在线程池中执行，用于执行异步任务。此方法需要返回计算结果给onPostExecute方法。<br>      (3)onProgressUpdate,在主线程中执行，当后台任务的执行进度发生改变的时候此方法会被调用。<br>      (4)onPostExecute,在主线程中执行，当异步方法执行后此方法会被调用，参数是doInBackground方法返回的值。<br>执行顺序：1-2-3-4<br><br><strong>注意：</strong>AysncTask的对象必须在主线程中创建，execute方法必须在UI线程调用，不要直接调用以上三个方法，一个AsyncTask对象只能执行一次，即只能调用一次execute方法，否则将报运行时异常。<br><br>通过阅读AsyncTask的源码，我们可以了解到：<br><br>&emsp;&emsp;AysncTask中有两个线程池，SerialExecutor是负责任务的排队，而THREAD_POOL_EXECUTOR才是真正地执行任务。而InternalHandler负责切换线程到主线程。实现原理是，将doInBackground方法的结果通过Handler方法传递并且切换到主线程，然后根据状态选择执行onCancelled或者onPostExecute方法。<br><br><strong>关于AsyncTask的任务并行和串行运行问题</strong><br><br>&emsp;&emsp;Android3.0以下的版本的AsyncTask是并行执行的，3.0及以上是串行执行的，在使AsyncTask在3.0及以上的版本并行，可以采用AsyncTask的executeOnExecutor方法。（此方法是3.0新添加的方法）<br><br><h5>HandlerThread</h5><br>&emsp;&emsp;<strong>HandlerThread</strong>是一种具有消息循环的线程，继承了Thread，是一种可以使用Handler的线程，实现方法是在run方法中通过Looper.prepare()来创建消息队列，并且通过Looper.loop()来开启消息循环。<br><br>使用方法如下<br><br><code>`JAVA
+
+     HandlerThread handlerThread = new HandlerThread(“Darren”);
+     handlerThread.start();
+     Handler superHandler = new Handler(handlerThread.getLooper()){
+     .....
+     }
+
+通过以上的方式，在主线程中的superHandler在收到消息后会在HandlerThread的线程执行代码。
+&lt;h5&gt;IntentService&lt;/h5&gt;
+**IntentService**是继承自Service的一个抽象类，可用于执行后台耗时的任务，在任务执行后自动停止，由于是服务的原因，比单纯的线程优先级要高很多。
+
+通过分析源码我们可以知道，在IntentService的onCreate方法中，onCreate方法会创建一个HandlerThread，并且使用HandlerThread的Looper创建Handler，所以通过Handler发送的消息都会在HandlerThread中执行，所以IntentService可以用于执行后台任务，每次启动IntentService，它的onStartCommand方法就会被调用一次，并且在onStartCommand方法中调用onStart方法，然后在onStart方法中通过Handler发送消息，将Intent和startId传输过去。Handler在收到消息之后，将Intent对象传递到onHandlerIntent方法中去处理（onHandlerIntent方式是抽象的，需要用户自己去实现），当onHandlerIntent方法执行结束之后会通过stopSelf(int startId)尝试停止服务，这里不用stopSelf()是因为可能还有其他消息未处理，通过判断最近启动服务的次数是否和startId相等，相等才立即停止服务。因为在IntentService中，Handler也是通过Looper处理消息，我们知道，Looper处理消息是按顺序的。
+
+&lt;h5&gt;线程池&lt;/h5&gt;
+线程池优点：
+
+    - 重用资源减少性能开销；
+    - 优先控制并发数量，减少阻塞；
+    - 实现管理线程的诸多功能。
+
+**ThreadPoolExecutor**是线程池的真正实现
+下面是ThreadPoolExecutor比较常用的一个构造方法</code>JAVA<br><br>     public ThreadPoolExecutor(<br>          int corePoolSize,//线程池的核心线程数， 数量为CPU核心数+1<br>          int maximumPoolSize,//线程池所能容纳的最大线程数，数量为CPU核心数*2+1<br>          long keepAliveTime,//非核心线程闲置时的超时时间，超过这个时长，将被回收，为1秒<br>                                          //（当allowCoreThreadTimeOut属性设置为true,核心线程同样会被回收）<br>          TimeUnit unit,//指定keepAliveTime参数的时间单位<br>          BlockingQueue<runnable> workQueue,//线程池的任务队列，容量为128<br>          ThreadFactory threadFactory//线程工厂，为线程池提供创建新线程的功能<br>     )<br><br>线程池的分类<br><br>    - FixedThreadPool:一种线程数量固定的线程池，当线程处于空闲状态时候，它们不会被回收，除非线程池关闭了，也就是只有核心线程，并且没有超时机制，任务队列也没有大小限制。能够更加快速地相应外界的请求。<br>    - CachedThreadPool:一种线程数量不定的线程池，只有非核心线程，最大线程数为任意大。当 所有线程都在活动而且有新任务到来的时候，会创建新的线程执行任务，默认情况下等候队列为空集合。超时机制的时长为60秒。适合执行大量的耗时较少的任务。<br>    - ScheduledThreadPool:是一种核心新县城数量固定，非核心线程数是没有限制，并且当非核心线程闲置时将立即被回收的线程池。主要用于执行定时任务和具有固定周期的重复任务。<br>    - SingleThreadExecutor:是一种只有一个核心线程，确保所有任务都在统一线程中按顺序执行的线程池。统一所有的任务到统一线程中顺序执行，不需要处理线程同步的问题。<br><h5></h5></runnable>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: true,
+            isPost: false,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+
   
     <article id="post-Android的消息机制" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -980,93 +1079,6 @@
 - 循环时间长开销大(pause指令)；
 - 只能保证一个共享变量的原子操作（对多个共享变量操作，我们可以把多个共享变量合并成一个共享变量来操作）。
 </code></pre>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-JAVA并发编程的挑战" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/03/JAVA并发编程的挑战/" class="article-date">
-      <time datetime="2016-01-03T13:37:47.000Z" itemprop="datePublished">2016-01-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h4>1.多线程一定快吗？</h4><br>不一定。因为多线程有上下文切换和创建进程的开销。<br><br>于是我们其实可以这样来减少上下文的切换：<br><br>    1.无锁并发编程（避免使用锁，比如数据分段处理）<br>    2.CAS算法（如JAVA的Atomic包）<br>    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）<br>    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）<br><br><h4>2.多线程如何避免死锁</h4>
-
-<pre><code>1.避免一个线程同时获取多个锁
-2.尽量每个锁只占有一个或者尽量少的资源
-3.使用定时锁来代替内部锁机制
-4.数据库锁的加锁和解锁必须在同一个数据库连接中
-</code></pre><p></p><h4>3.资源限制</h4><br>&emsp;我们在讨论效率和速度的时候经常忽略一个点，那就是我们所研究的东西都是建立在计算机硬件资源和软件资源条件允许的情况上，但是，其实，<strong>程序的执行速度受限制于计算机的硬件和软件资源</strong>。比如有时候我们下载一个资源，可能服务器限定最高每个访问最高下载速度是1MB每秒，这时候假设我们会开启10条线程进行下载，但是如果服务器或者用户机器的带宽只有2MB每秒，速度就不可能达到10MB每秒。当然除此之外还有硬盘读写速度，CPU处理度等。<p></p>
-<p></p><h4>4.资源限制引发的问题</h4><br>&emsp;如果受限于资源，那么出于效率考虑将串行的代码改为并发执行，仍然在串行执行，这时候<strong>程序不但不会加速执行，反而会更慢，因为增加了上下文切换和资源调度的时间。</strong><p></p>
-<p></p><h4>5.解决资源限制的问题</h4><br>    -硬件资源限制可以考虑强化单机的资源或者让程序在多机上执行。<br>    -软件资源限制可以考虑使用资源池将资源复用。比如复用数据库和Socket连接等。<p></p>
-<p><br><br>–源自《JAVA并发编程的艺术》第一章“JAVA并发编程的挑战”读书笔记</p>
-
       
     </div>
     
