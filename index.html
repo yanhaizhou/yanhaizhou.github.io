@@ -116,7 +116,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA容器/" style="font-size: 12.5px;">JAVA容器</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 17.5px;">JAVA并发编程的艺术</a> <a href="/tags/JAVA源码分析/" style="font-size: 12.5px;">JAVA源码分析</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
+                        <a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA容器/" style="font-size: 10px;">JAVA容器</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 16.67px;">JAVA并发编程的艺术</a> <a href="/tags/JAVA源码分析/" style="font-size: 10px;">JAVA源码分析</a>
                     </div>
                 </section>
                 
@@ -543,7 +543,7 @@
 <p>再来看下hashmap的get操作</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">get</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">    	<span class="comment">//key为空的时候的处理方法，有个特定的HashMapEntry存储着key为null的数据</span></span><br><span class="line">        HashMapEntry&lt;K, V&gt; e = entryForNullKey;</span><br><span class="line">        <span class="comment">//如果没有保存key为null的数据，那么就返回null</span></span><br><span class="line">        <span class="keyword">return</span> e == <span class="keyword">null</span> ? <span class="keyword">null</span> : e.value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">    HashMapEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">    <span class="keyword">for</span> (HashMapEntry&lt;K, V&gt; e = tab[hash &amp; (tab.length - <span class="number">1</span>)];</span><br><span class="line">            e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">        K eKey = e.key;</span><br><span class="line">        <span class="comment">//？这里有个疑问，为什么要判断eKey == key ?这不是判断指向了吗</span></span><br><span class="line">        <span class="keyword">if</span> (eKey == key || (e.hash == hash &amp;&amp; key.equals(eKey))) &#123;</span><br><span class="line">            <span class="keyword">return</span> e.value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>HashMap的put操作</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> putValueForNullKey(value);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">       HashMapEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">       <span class="keyword">int</span> index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">       <span class="comment">//判断是否存在key匹配而且hash匹配的entry，如果存在，那就更新并返回旧值value</span></span><br><span class="line">       <span class="keyword">for</span> (HashMapEntry&lt;K, V&gt; e = tab[index]; e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">           <span class="keyword">if</span> (e.hash == hash &amp;&amp; key.equals(e.key)) &#123;</span><br><span class="line">               preModify(e);</span><br><span class="line">               V oldValue = e.value;</span><br><span class="line">               e.value = value;</span><br><span class="line">               <span class="keyword">return</span> oldValue;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//运行到这里，意味着并没有存在对应的，需要插入。</span></span><br><span class="line">       modCount++;</span><br><span class="line">       <span class="comment">//如果size增加之后大于极限值，那么就扩容</span></span><br><span class="line">       <span class="keyword">if</span> (size++ &gt; threshold) &#123;</span><br><span class="line">           tab = doubleCapacity();</span><br><span class="line">           index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       addNewEntry(key, value, hash, index);</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">private</span> HashMapEntry&lt;K, V&gt;[] doubleCapacity() &#123;</span><br><span class="line">       HashMapEntry&lt;K, V&gt;[] oldTable = table;</span><br><span class="line">       <span class="keyword">int</span> oldCapacity = oldTable.length;</span><br><span class="line">       <span class="comment">//如果等于预设好的最大容量，则直接返回原来的table，</span></span><br><span class="line">      	<span class="comment">//会继续在原来的table插入，尽管已经超过了预设好的最大容量</span></span><br><span class="line">       <span class="keyword">if</span> (oldCapacity == MAXIMUM_CAPACITY) &#123;</span><br><span class="line">           <span class="keyword">return</span> oldTable;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">int</span> newCapacity = oldCapacity * <span class="number">2</span>;</span><br><span class="line">       HashMapEntry&lt;K, V&gt;[] newTable = makeTable(newCapacity);</span><br><span class="line">       <span class="keyword">if</span> (size == <span class="number">0</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> newTable;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; oldCapacity; j++) &#123;</span><br><span class="line">           <span class="comment">/*</span><br><span class="line">            * Rehash the bucket using the minimum number of field writes.</span><br><span class="line">            * This is the most subtle and delicate code in the class.</span><br><span class="line">            */</span></span><br><span class="line">           HashMapEntry&lt;K, V&gt; e = oldTable[j];</span><br><span class="line">           <span class="keyword">if</span> (e == <span class="keyword">null</span>) &#123;</span><br><span class="line">               <span class="keyword">continue</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//此时oldCapacity=newCapacity-1；在这里又不得不感叹下编程的巧妙</span></span><br><span class="line">           <span class="keyword">int</span> highBit = e.hash &amp; oldCapacity;</span><br><span class="line">           HashMapEntry&lt;K, V&gt; broken = <span class="keyword">null</span>;</span><br><span class="line">           <span class="comment">//？新索引为j|highBit,即原来的索引与现在的哈希值做或操作，为什么呢。。还没想清楚逻辑</span></span><br><span class="line">           newTable[j | highBit] = e;</span><br><span class="line">          	<span class="comment">//重新计算HashMapEntry链表后面的key的索引位置，因为容量不同，对应的索引也是不同的</span></span><br><span class="line">           <span class="keyword">for</span> (HashMapEntry&lt;K, V&gt; n = e.next; n != <span class="keyword">null</span>; e = n, n = n.next) &#123;</span><br><span class="line">               <span class="keyword">int</span> nextHighBit = n.hash &amp; oldCapacity;</span><br><span class="line">               <span class="keyword">if</span> (nextHighBit != highBit) &#123;</span><br><span class="line">                   <span class="keyword">if</span> (broken == <span class="keyword">null</span>)</span><br><span class="line">                       newTable[j | nextHighBit] = n;</span><br><span class="line">                   <span class="keyword">else</span></span><br><span class="line">                       broken.next = n;</span><br><span class="line">                   broken = e;</span><br><span class="line">                   <span class="comment">//方便判断后面的值是否应该传入与前面的值同个位置</span></span><br><span class="line">                   highBit = nextHighBit;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">if</span> (broken != <span class="keyword">null</span>)</span><br><span class="line">               broken.next = <span class="keyword">null</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> newTable;</span><br><span class="line">   &#125;</span><br><span class="line">       </span><br><span class="line">   <span class="function"><span class="keyword">void</span> <span class="title">addNewEntry</span><span class="params">(K key, V value, <span class="keyword">int</span> hash, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">       table[index] = <span class="keyword">new</span> HashMapEntry&lt;K, V&gt;(key, value, hash, table[index]);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(K key, V value)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> putValueForNullKey(value);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">       HashMapEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">       <span class="keyword">int</span> index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">       <span class="comment">//判断是否存在key匹配而且hash匹配的entry，如果存在，那就更新并返回旧值value</span></span><br><span class="line">       <span class="keyword">for</span> (HashMapEntry&lt;K, V&gt; e = tab[index]; e != <span class="keyword">null</span>; e = e.next) &#123;</span><br><span class="line">           <span class="keyword">if</span> (e.hash == hash &amp;&amp; key.equals(e.key)) &#123;</span><br><span class="line">               preModify(e);</span><br><span class="line">               V oldValue = e.value;</span><br><span class="line">               e.value = value;</span><br><span class="line">               <span class="keyword">return</span> oldValue;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//运行到这里，意味着并没有存在对应的，需要插入。</span></span><br><span class="line">       modCount++;</span><br><span class="line">       <span class="comment">//如果size增加之后大于极限值，那么就扩容</span></span><br><span class="line">       <span class="keyword">if</span> (size++ &gt; threshold) &#123;</span><br><span class="line">           tab = doubleCapacity();</span><br><span class="line">           index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">       &#125;</span><br><span class="line">       addNewEntry(key, value, hash, index);</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">private</span> HashMapEntry&lt;K, V&gt;[] doubleCapacity() &#123;</span><br><span class="line">       HashMapEntry&lt;K, V&gt;[] oldTable = table;</span><br><span class="line">       <span class="keyword">int</span> oldCapacity = oldTable.length;</span><br><span class="line">       <span class="comment">//如果等于预设好的最大容量，则直接返回原来的table，</span></span><br><span class="line">      	<span class="comment">//会继续在原来的table插入，尽管已经超过了预设好的最大容量</span></span><br><span class="line">       <span class="keyword">if</span> (oldCapacity == MAXIMUM_CAPACITY) &#123;</span><br><span class="line">           <span class="keyword">return</span> oldTable;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">int</span> newCapacity = oldCapacity * <span class="number">2</span>;</span><br><span class="line">       HashMapEntry&lt;K, V&gt;[] newTable = makeTable(newCapacity);</span><br><span class="line">       <span class="keyword">if</span> (size == <span class="number">0</span>) &#123;</span><br><span class="line">           <span class="keyword">return</span> newTable;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; oldCapacity; j++) &#123;</span><br><span class="line">           <span class="comment">/*</span><br><span class="line">            * Rehash the bucket using the minimum number of field writes.</span><br><span class="line">            * This is the most subtle and delicate code in the class.</span><br><span class="line">            */</span></span><br><span class="line">           HashMapEntry&lt;K, V&gt; e = oldTable[j];</span><br><span class="line">           <span class="keyword">if</span> (e == <span class="keyword">null</span>) &#123;</span><br><span class="line">               <span class="keyword">continue</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//因为更改了容量之后，多了一个最高位，所以求出最高位</span></span><br><span class="line">           <span class="keyword">int</span> highBit = e.hash &amp; oldCapacity;</span><br><span class="line">           HashMapEntry&lt;K, V&gt; broken = <span class="keyword">null</span>;</span><br><span class="line">           <span class="comment">//新索引为j|highBit,与最高位做非处理就是新索引</span></span><br><span class="line">           newTable[j | highBit] = e;</span><br><span class="line">          	</span><br><span class="line">           <span class="keyword">for</span> (HashMapEntry&lt;K, V&gt; n = e.next; n != <span class="keyword">null</span>; e = n, n = n.next) &#123;</span><br><span class="line">               <span class="keyword">int</span> nextHighBit = n.hash &amp; oldCapacity;</span><br><span class="line">               <span class="comment">//保存最高位的值，判断链表后面的是不是最高位一样，如果一样的话就还是链表后面</span></span><br><span class="line">               <span class="keyword">if</span> (nextHighBit != highBit) &#123;</span><br><span class="line">                   <span class="keyword">if</span> (broken == <span class="keyword">null</span>)</span><br><span class="line">                       newTable[j | nextHighBit] = n;</span><br><span class="line">                   <span class="keyword">else</span></span><br><span class="line">                       broken.next = n;</span><br><span class="line">                   broken = e;</span><br><span class="line">                   <span class="comment">//方便判断后面的值是否应该传入与前面的值同个位置</span></span><br><span class="line">                   highBit = nextHighBit;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">if</span> (broken != <span class="keyword">null</span>)</span><br><span class="line">               broken.next = <span class="keyword">null</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> newTable;</span><br><span class="line">   &#125;</span><br><span class="line">       </span><br><span class="line">   <span class="function"><span class="keyword">void</span> <span class="title">addNewEntry</span><span class="params">(K key, V value, <span class="keyword">int</span> hash, <span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">       table[index] = <span class="keyword">new</span> HashMapEntry&lt;K, V&gt;(key, value, hash, table[index]);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 <p>remove操作</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">remove</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> removeNullKey();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> hash = Collections.secondaryHash(key);</span><br><span class="line">    HashMapEntry&lt;K, V&gt;[] tab = table;</span><br><span class="line">    <span class="keyword">int</span> index = hash &amp; (tab.length - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">for</span> (HashMapEntry&lt;K, V&gt; e = tab[index], prev = <span class="keyword">null</span>;</span><br><span class="line">            e != <span class="keyword">null</span>; prev = e, e = e.next) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e.hash == hash &amp;&amp; key.equals(e.key)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (prev == <span class="keyword">null</span>) &#123;</span><br><span class="line">                tab[index] = e.next;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                prev.next = e.next;</span><br><span class="line">            &#125;</span><br><span class="line">            modCount++;</span><br><span class="line">            size--;</span><br><span class="line">            postRemove(e);</span><br><span class="line">            <span class="keyword">return</span> e.value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> V <span class="title">removeNullKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    HashMapEntry&lt;K, V&gt; e = entryForNullKey;</span><br><span class="line">    <span class="keyword">if</span> (e == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    entryForNullKey = <span class="keyword">null</span>;</span><br><span class="line">    modCount++;</span><br><span class="line">    size--;</span><br><span class="line">    postRemove(e);</span><br><span class="line">    <span class="keyword">return</span> e.value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这样看下来其实HashMap源码基本已经阅读了一遍了。我们来总结一下吧</p>
@@ -747,91 +747,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
-  
-    <article id="post-立足2016" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/07/立足2016/" class="article-date">
-      <time datetime="2016-01-07T06:59:34.000Z" itemprop="datePublished">2016-01-07</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/07/立足2016/">立足2016</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <p>&emsp;立足2016，之所以以此为题，是因为最近刚过了元旦，回头看是急忙走过的2015，向前看是正在经历的2016。</p>
-<p>&emsp;现在大概是自己学习Android编程一年半的时间点，其实我很想问问自己到底在这一年半里为自己的选择付出了什么。</p>
-<p></p><h5>关于社团</h5><br>&emsp;2015上半年也就是大二下学期，我有社团，有篮球队，有工作室。我想这是我最忙碌的半年吧，本来打算退了社团，因为部门部长一共有6个，就算我走了他们也可以hold住。但是小伙伴们都挽留我，任性地叫我忙的话就不用来社团这边了，有空过来就行了。感情还是在的，于是我留下来了。可是以我的性格，怎么可能留在那里却没有干事情，那不是一个负责任的我。<p></p>
-<p></p><h5>关于编程</h5><br>&emsp;昨晚肥文问我，“你热爱你所选择的编程吗？”。我第一反应是，当然热爱啊。可是，她说中了我的痛处。没错，每个人都有热爱。我热爱篮球，热爱社交，热爱编程。可是想想，人有那么多的精力去热爱那么多的东西吗。很明显，我并没有。等到毕业的时候，我需要靠自己去工作，去买房，去建立自己的家庭，父母会不会帮忙我不知道，但是活到现在22岁，我觉得有个道理还是必须明白的，遇到事情首先应该不要太依赖别人，要靠自己。于是毫无疑问，编程这条路我肯定要努力地去走，而且要用心地走，并且要走得好。可是我为什么还给自己选择了那么多的热爱。如果一定要问我后不后悔，我必定斩钉截铁的告诉你，我不后悔。我觉得这是我的选择，这就是我的青春。每个人的选择都是不同的，我要一个缤纷的大学生活而不是单调的大学经历。但是回过头来说，我想，我的热爱被分成多个方向，于是对于编程，可能并没有当初大一刚进来的时候那样专注吧。有项目的时候在追赶时间的过程中匆忙地写完该做的部分，在有空的时候匆忙地看下所要学习的知识，做做笔记。这一切的所有我都想用匆忙两个字来概括。因为现在回头想起来，当初所做都太过去粗糙了。回头看自己的笔记，有时候觉得仿佛没做过这样的笔记。我想把2015上半年所做的归结为：完成任务式地学习。这也是为什么肥文说的话震撼了我的原因。如她所说，热爱的编程的人越编程越爱，越来越着迷。所幸，2015下半年我觉得自己的编程学习并不是特别糟，看了挺多的专业书，暑假没有回家，留在工作室学习和做项目，不用上课的时候懒得每天撸代码到一点还得回宿舍于是时常直接在工作室睡折叠床，我爱那段暑假生活。<p></p>
-<p></p><h5>关于篮球</h5><br>&emsp;也许就是昨晚她问我的那个问题，让我放弃了篮球了吧。想一想，在大一球队招新的时候，我应该是同届中能力最差的一个吧。能够进入到球队对于我来说只能用幸运与被眷顾来概括。进了球队，尽管能力最差不仅训练有点吃力而且也没有机会在正式比赛中上场。但是我一步一步地努力一点一点地学习与进步，尽管能力不是很好，但是态度是最积极的。这也让我最后成为了我们那届的队长之一。回想2015，我在球队的付出是我现在回想起来都佩服我自己的。作为新生代的球队队长，该做的事情很多。我们那届有两个队长，我和邦邦。我负责训练发送短信以及统计情况，他负责其他的，当然这只是表面的工作。作为队长，训练态度很大程度上会影响其他成员，所以我基本没有缺席，甚至经常下午两点就去球场霸场，夏天的时候有时候训练到晚上七点。2:00~7:00-&gt;5个小时，回到宿舍洗澡吃饭还得继续往工作室跑。特别是2015下半年，也许是我在球队这边压力最大的一年，邦邦被医院诊断为肺结核，休学回家。于是我们这一届就剩下我一个队长。纵然那时候已经从师弟中选出了新一届的队长，但是自己还是要监督还有指导他们，我想，那是我在球队过得最煎熬的一段时间。可见，有搭档是件多么好的事情。幸好邦邦已经痊愈归来，不然我一个人真的好慌。好了，回到我要讲的主题:放弃篮球。我想这是一个我说出口眼眶会湿润的字眼。我很不舍，但是现实真的很残酷。我想我没有太多任性的机会了。也许你们会想，作为球队队长，你放弃篮球了，那球队怎么办。很明显，我不会是一个不负责任就撇下一切的人。在我眼中，不放弃篮球意味着经常逼自己训练甚至加训，而放弃篮球意味着只把它当爱好，打打就算了，不去想什么比赛的事情。所以就算我这样决定了，新的一年有训练我会尽量去，尽管我指的我会去找一份实习，可能没有时间去…但是我真的会尽量抽空去看看那群兄弟。<p></p>
-<p></p><h5>计划</h5><br>&emsp;毫无疑问，人要铭记过去，立足当下，走向未来。<p></p>
-<p>&emsp;过去的自己不是没有定下计划，只是经常是计划美好过现实，最终计划只能无奈地宣告失败。对于2016，我想是我极其重要的一年，实习与就业。今天刚刚去面试一家公司，不知道结果怎么样，但是就算挂了，我也会再找，找一份实习充实自己的项目经验，体验一下公司那种团队合作以及模块化管理。</p>
-<p></p><h6>&emsp;计划：</h6><br>    1.继续写博客，保持习惯，尽量每天一篇，忙的话一周不能少于三篇；<br>    2.找到一份实习，白天去实习，晚上有空的话就看书；<br>    3.扎实Android基本知识(根据Android开发艺术探索)；<br>    4.使用和了解第三方库；<br>    5.有机会的话建立一个自己的github项目，并保持更新；<br>    6.与人为善，宽容待人；<br>    7.更多地接触设计模式以及Android设计框架;<br>    8.找到一份好的实习offer+毕业offer<br>    9.To hunt or to be hunted.<p></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/心情日记/">心情日记</a></li></ul>
     </div>
 
       
@@ -1096,6 +1011,93 @@
 - 循环时间长开销大(pause指令)；
 - 只能保证一个共享变量的原子操作（对多个共享变量操作，我们可以把多个共享变量合并成一个共享变量来操作）。
 </code></pre>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+        <script>
+            var yiliaConfig = {
+            fancybox: true,
+            mathjax: true,
+            animate: true,
+            isHome: true,
+            isPost: false,
+            isArchive: false,
+            isTag: false,
+            isCategory: false,
+            open_in_new: false
+            }
+        </script>
+        
+
+  
+    <article id="post-JAVA并发编程的挑战" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/01/03/JAVA并发编程的挑战/" class="article-date">
+      <time datetime="2016-01-03T13:37:47.000Z" itemprop="datePublished">2016-01-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h4>1.多线程一定快吗？</h4><br>不一定。因为多线程有上下文切换和创建进程的开销。<br><br>于是我们其实可以这样来减少上下文的切换：<br><br>    1.无锁并发编程（避免使用锁，比如数据分段处理）<br>    2.CAS算法（如JAVA的Atomic包）<br>    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）<br>    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）<br><br><h4>2.多线程如何避免死锁</h4>
+
+<pre><code>1.避免一个线程同时获取多个锁
+2.尽量每个锁只占有一个或者尽量少的资源
+3.使用定时锁来代替内部锁机制
+4.数据库锁的加锁和解锁必须在同一个数据库连接中
+</code></pre><p></p><h4>3.资源限制</h4><br>&emsp;我们在讨论效率和速度的时候经常忽略一个点，那就是我们所研究的东西都是建立在计算机硬件资源和软件资源条件允许的情况上，但是，其实，<strong>程序的执行速度受限制于计算机的硬件和软件资源</strong>。比如有时候我们下载一个资源，可能服务器限定最高每个访问最高下载速度是1MB每秒，这时候假设我们会开启10条线程进行下载，但是如果服务器或者用户机器的带宽只有2MB每秒，速度就不可能达到10MB每秒。当然除此之外还有硬盘读写速度，CPU处理度等。<p></p>
+<p></p><h4>4.资源限制引发的问题</h4><br>&emsp;如果受限于资源，那么出于效率考虑将串行的代码改为并发执行，仍然在串行执行，这时候<strong>程序不但不会加速执行，反而会更慢，因为增加了上下文切换和资源调度的时间。</strong><p></p>
+<p></p><h4>5.解决资源限制的问题</h4><br>    -硬件资源限制可以考虑强化单机的资源或者让程序在多机上执行。<br>    -软件资源限制可以考虑使用资源池将资源复用。比如复用数据库和Socket连接等。<p></p>
+<p><br><br>–源自《JAVA并发编程的艺术》第一章“JAVA并发编程的挑战”读书笔记</p>
+
       
     </div>
     

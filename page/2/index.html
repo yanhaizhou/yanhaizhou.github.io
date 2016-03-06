@@ -116,7 +116,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <a href="/tags/Android/" style="font-size: 15px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA容器/" style="font-size: 12.5px;">JAVA容器</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 17.5px;">JAVA并发编程的艺术</a> <a href="/tags/JAVA源码分析/" style="font-size: 12.5px;">JAVA源码分析</a> <a href="/tags/心情日记/" style="font-size: 10px;">心情日记</a>
+                        <a href="/tags/Android/" style="font-size: 13.33px;">Android</a> <a href="/tags/JAVA/" style="font-size: 20px;">JAVA</a> <a href="/tags/JAVA容器/" style="font-size: 10px;">JAVA容器</a> <a href="/tags/JAVA并发编程的艺术/" style="font-size: 16.67px;">JAVA并发编程的艺术</a> <a href="/tags/JAVA源码分析/" style="font-size: 10px;">JAVA源码分析</a>
                     </div>
                 </section>
                 
@@ -187,93 +187,6 @@
     </div>
 </nav>
       <div class="body-wrap">
-  
-    <article id="post-JAVA并发编程的挑战" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/01/03/JAVA并发编程的挑战/" class="article-date">
-      <time datetime="2016-01-03T13:37:47.000Z" itemprop="datePublished">2016-01-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/03/JAVA并发编程的挑战/">JAVA并发编程的挑战</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h4>1.多线程一定快吗？</h4><br>不一定。因为多线程有上下文切换和创建进程的开销。<br><br>于是我们其实可以这样来减少上下文的切换：<br><br>    1.无锁并发编程（避免使用锁，比如数据分段处理）<br>    2.CAS算法（如JAVA的Atomic包）<br>    3.使用最少线程（避免创建不必要的线程，在任务高峰期后及时调整线程数量）<br>    4.协程（比如操作系统中的多任务调度，在发生IO中断的时候及时切换执行任务）<br><br><h4>2.多线程如何避免死锁</h4>
-
-<pre><code>1.避免一个线程同时获取多个锁
-2.尽量每个锁只占有一个或者尽量少的资源
-3.使用定时锁来代替内部锁机制
-4.数据库锁的加锁和解锁必须在同一个数据库连接中
-</code></pre><p></p><h4>3.资源限制</h4><br>&emsp;我们在讨论效率和速度的时候经常忽略一个点，那就是我们所研究的东西都是建立在计算机硬件资源和软件资源条件允许的情况上，但是，其实，<strong>程序的执行速度受限制于计算机的硬件和软件资源</strong>。比如有时候我们下载一个资源，可能服务器限定最高每个访问最高下载速度是1MB每秒，这时候假设我们会开启10条线程进行下载，但是如果服务器或者用户机器的带宽只有2MB每秒，速度就不可能达到10MB每秒。当然除此之外还有硬盘读写速度，CPU处理度等。<p></p>
-<p></p><h4>4.资源限制引发的问题</h4><br>&emsp;如果受限于资源，那么出于效率考虑将串行的代码改为并发执行，仍然在串行执行，这时候<strong>程序不但不会加速执行，反而会更慢，因为增加了上下文切换和资源调度的时间。</strong><p></p>
-<p></p><h4>5.解决资源限制的问题</h4><br>    -硬件资源限制可以考虑强化单机的资源或者让程序在多机上执行。<br>    -软件资源限制可以考虑使用资源池将资源复用。比如复用数据库和Socket连接等。<p></p>
-<p><br><br>–源自《JAVA并发编程的艺术》第一章“JAVA并发编程的挑战”读书笔记</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA/">JAVA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JAVA并发编程的艺术/">JAVA并发编程的艺术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-
-
-
-    
-        <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-        <script>
-            var yiliaConfig = {
-            fancybox: true,
-            mathjax: true,
-            animate: true,
-            isHome: true,
-            isPost: false,
-            isArchive: false,
-            isTag: false,
-            isCategory: false,
-            open_in_new: false
-            }
-        </script>
-        
-
   
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   
